@@ -1,352 +1,1115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shramic.com - Coming Soon</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Montserrat:wght@300;400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Shramic Business System</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            background: #0a1929;
-        }
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+			line-height: 1.6;
+			color: #333;
+		}
 
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
+		/* Language-specific font styles */
+		body[data-lang="en"] {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+		}
 
-        .content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 10;
-            color: white;
-        }
+		body[data-lang="hi"] {
+			font-family: 'Noto Serif Devanagari', serif;
+		}
 
-        h1 {
-            font-family: 'Oxanium', sans-serif;
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 8px;
-            background: linear-gradient(45deg, #1976d2, #42a5f5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glow 2s ease-in-out infinite alternate;
-            font-weight: 800;
-        }
+		body[data-lang="kn"] {
+			font-family: 'Noto Serif Kannada', serif;
+		}
 
-        .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            color: #90caf9;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 0.5s forwards;
-            font-weight: 300;
-            letter-spacing: 2px;
-        }
+		.hero-text h1 {
+			font-size: 3.5rem;
+			font-weight: 800;
+			line-height: 1.2;
+			margin-bottom: 1.5rem;
+			color: #ffffff;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+		}
 
-        .coming-soon {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.2rem;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(25, 118, 210, 0.8);
-            opacity: 0;
-            animation: fadeIn 1s ease-out 1s forwards;
-            font-weight: 700;
-            letter-spacing: 4px;
-        }
+		body[data-lang="hi"] .hero-text h1,
+		body[data-lang="kn"] .hero-text h1 {
+			font-size: 3rem;
+			/* Slightly smaller for better readability in non-Latin scripts */
+			line-height: 1.3;
+		}
 
-        .loader {
-            margin-top: 2rem;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 1.5s forwards;
-        }
+		.container {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 20px;
+		}
 
-        .loader-bar {
-            width: 200px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            margin: 0 auto;
-            overflow: hidden;
-        }
+		/* Header */
+		header {
+			background: rgb(255 255 255 / 8%);
+			backdrop-filter: blur(10px);
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			z-index: 1000;
+			box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+		}
 
-        .loader-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #1976d2, #42a5f5);
-            animation: loading 2s ease-in-out infinite;
-        }
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1rem 0;
+		}
 
-        @keyframes glow {
-            from { filter: drop-shadow(0 0 10px rgba(25, 118, 210, 0.5)); }
-            to { filter: drop-shadow(0 0 20px rgba(66, 165, 245, 0.8)); }
-        }
+		.logo {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+		.logo-text {
+			display: flex;
+			flex-direction: column;
+		}
 
-        @keyframes loading {
-            0% { width: 0%; }
-            50% { width: 100%; }
-            100% { width: 0%; }
-        }
+		.logo-text span.main {
+			font-size: 2rem;
+			font-weight: bold;
+			color: #3b82f6;
+		}
 
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-        }
-    </style>
+		.logo-text span.sub {
+			font-size: 0.8rem;
+			font-weight: normal;
+			letter-spacing: 0.2em;
+			color: #1f2937;
+		}
+
+		.logo svg {
+			width: 48px;
+			height: 48px;
+			transition: transform 0.3s ease, filter 0.3s ease;
+		}
+
+		.logo:hover svg {
+			transform: scale(1.1);
+			filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
+		}
+
+		.logo svg path:first-child {
+			fill: #3b82f6;
+		}
+
+		.logo svg path:last-child {
+			fill: #bfdbfe;
+		}
+
+		.nav-links {
+			display: flex;
+			list-style: none;
+			gap: 2rem;
+			margin: 0;
+		}
+
+		.nav-links a {
+			text-decoration: none;
+			color: #333;
+			font-weight: 500;
+			transition: color 0.3s ease;
+		}
+
+		.nav-links a:hover {
+			color: #3b82f6;
+		}
+
+		.auth-buttons {
+			display: flex;
+			gap: 1rem;
+		}
+
+		.auth-buttons a {
+			padding: 0.5rem 1rem;
+			text-decoration: none;
+			border: 1px solid #3b82f6;
+			border-radius: 6px;
+			transition: all 0.3s ease;
+		}
+
+		.login {
+			color: #3b82f6;
+			background: transparent;
+		}
+
+		.register {
+			color: white;
+			background: #3b82f6;
+		}
+
+		.auth-buttons a:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+		}
+
+		.mobile-menu-btn {
+			display: none;
+			background: none;
+			border: none;
+			font-size: 1.5rem;
+			cursor: pointer;
+		}
+
+		/* Hero Section */
+		.hero {
+			background: url("https://github.com/prajwal032004/prajwal032004/blob/main/hiii.jpg?raw=true"), linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			padding-top: 80px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.3);
+			opacity: 0.3;
+		}
+
+		/* Hero Section - Desktop View (min-width: 769px) */
+		@media (min-width: 769px) {
+			.hero {
+				background: url("https://github.com/prajwal032004/prajwal032004/blob/main/hiii.jpg?raw=true"), linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				padding-top: 80px;
+				position: relative;
+				overflow: hidden;
+			}
+		}
+
+		/* Hero Section - Mobile View (max-width: 768px) */
+		@media (max-width: 768px) {
+			.hero {
+				background: url('https://github.com/prajwal032004/prajwal032004/blob/main/hiii.jpg?raw=true'), linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				background-size: cover;
+				background-position: right;
+				/* Focus on the right part of the image */
+				background-repeat: no-repeat;
+				min-height: 63vh;
+				/* 576.105px equivalent in viewport units */
+				display: flex;
+				align-items: center;
+				padding-top: 35px;
+				position: relative;
+				overflow: hidden;
+				flex-direction: row-reverse;
+			}
+		}
+
+		.hero::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.3);
+			opacity: 0.3;
+		}
+
+		.hero-content {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 3rem;
+			align-items: center;
+			position: relative;
+			z-index: 1;
+		}
+
+		.hero-text p {
+			font-size: 1.2rem;
+			margin-bottom: 2rem;
+			color: #f3f4f6;
+			line-height: 1.6;
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+		}
+
+		.cta-button {
+			display: inline-block;
+			background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+			color: white;
+			padding: 1rem 2rem;
+			text-decoration: none;
+			border-radius: 12px;
+			font-weight: 600;
+			font-size: 1.1rem;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+		}
+
+		.cta-button:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+		}
+
+		.hero-image {
+			position: relative;
+			display: flex;
+			justify-content: center;
+		}
+
+		.hero-image img {
+			width: 100%;
+			max-width: 500px;
+			height: auto;
+			border-radius: 20px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+			transition: transform 0.3s ease;
+		}
+
+		.hero-image img:hover {
+			transform: scale(1.02);
+		}
+
+		/* Services Section */
+		.services {
+			padding: 5rem 0;
+			background: white;
+		}
+
+		.services-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 2rem;
+			margin-top: 3rem;
+		}
+
+		.service-card {
+			background: white;
+			border-radius: 16px;
+			padding: 2rem;
+			text-align: center;
+			box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+			transition: all 0.3s ease;
+			border: 1px solid rgba(59, 130, 246, 0.1);
+		}
+
+		.service-card:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+			border-color: #3b82f6;
+		}
+
+		.service-icon {
+			width: 80px;
+			height: 80px;
+			background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 1.5rem;
+			box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+		}
+
+		.service-icon svg {
+			width: 44px;
+			height: 44px;
+			stroke: white;
+			stroke-width: 1.8;
+			fill: none;
+			transition: transform 0.3s ease;
+		}
+
+		.service-icon svg .fill-path {
+			fill: rgba(255, 255, 255, 0.2);
+		}
+
+		.service-card:hover .service-icon svg {
+			transform: scale(1.15);
+		}
+
+		.service-card h3 {
+			font-size: 1.4rem;
+			font-weight: 700;
+			margin-bottom: 1rem;
+			color: #1f2937;
+		}
+
+		.service-card p {
+			color: #6b7280;
+			line-height: 1.6;
+		}
+
+		/* CTA Section */
+		.cta-section {
+			background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+			color: white;
+			padding: 4rem 0;
+			text-align: center;
+		}
+
+		.cta-section h2 {
+			font-size: 2.5rem;
+			font-weight: 700;
+			margin-bottom: 2rem;
+		}
+
+		.join-button {
+			display: inline-block;
+			background: white;
+			color: #3b82f6;
+			padding: 1rem 2.5rem;
+			text-decoration: none;
+			border-radius: 12px;
+			font-weight: 600;
+			font-size: 1.1rem;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+		}
+
+		.join-button:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+		}
+
+		/* Footer */
+		footer {
+			background: #1f2937;
+			color: white;
+			padding: 3rem 0 1rem;
+		}
+
+		.footer-content {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+			gap: 3rem;
+			margin-bottom: 2rem;
+		}
+
+		.footer-brand {
+			font-size: 1.2rem;
+			font-weight: 600;
+		}
+
+		.footer-links {
+			display: flex;
+			gap: 3rem;
+			justify-content: flex-end;
+		}
+
+		.footer-links a {
+			color: #d1d5db;
+			text-decoration: none;
+			transition: color 0.3s ease;
+		}
+
+		.footer-links a:hover {
+			color: white;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.mobile-menu-btn {
+				display: block;
+			}
+
+			.nav-links {
+				display: none;
+				flex-direction: column;
+				position: absolute;
+				top: 60px;
+				left: 0;
+				right: 0;
+				background: rgb(255 255 255 / 95%);
+				backdrop-filter: blur(10px);
+				padding: 1rem;
+				text-align: center;
+			}
+
+			.nav-links.active {
+				display: flex;
+			}
+
+			.auth-buttons {
+				display: none;
+			}
+
+			.logo svg {
+				width: 36px;
+				height: 36px;
+			}
+
+			.logo-text span.main {
+				font-size: 1.5rem;
+			}
+
+			.logo-text span.sub {
+				font-size: 0.7rem;
+			}
+
+			nav {
+				padding: 0.5rem 0;
+			}
+
+			.hero-content {
+				grid-template-columns: 1fr;
+				text-align: center;
+				gap: 2rem;
+			}
+
+			.hero-text h1 {
+				font-size: 2.5rem;
+			}
+
+			.services-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.footer-content {
+				grid-template-columns: 1fr;
+				text-align: center;
+			}
+
+			.footer-links {
+				justify-content: center;
+				flex-wrap: wrap;
+				gap: 1.5rem;
+			}
+
+			.cta-section h2 {
+				font-size: 2rem;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.container {
+				padding: 0 15px;
+			}
+
+			.logo svg {
+				width: 32px;
+				height: 32px;
+			}
+
+			.logo-text span.main {
+				font-size: 1.3rem;
+			}
+
+			.logo-text span.sub {
+				font-size: 0.6rem;
+			}
+
+			.hero-text h1 {
+				font-size: 2rem;
+			}
+
+			.hero-text p {
+				font-size: 1rem;
+			}
+
+			.service-card {
+				padding: 1.5rem;
+			}
+		}
+
+		/* Animations */
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.service-card {
+			animation: fadeInUp 0.6s ease forwards;
+		}
+
+		.service-card:nth-child(1) {
+			animation-delay: 0.1s;
+		}
+
+		.service-card:nth-child(2) {
+			animation-delay: 0.2s;
+		}
+
+		.service-card:nth-child(3) {
+			animation-delay: 0.3s;
+		}
+
+		.service-card:nth-child(4) {
+			animation-delay: 0.4s;
+		}
+
+		.service-card:nth-child(5) {
+			animation-delay: 0.5s;
+		}
+
+		/* Language Selector Styling */
+		.language-selector {
+			padding: 0.6rem 2.5rem 0.6rem 1rem;
+			/* Increased right padding for arrow */
+			border: 1px solid #3b82f6;
+			border-radius: 8px;
+			/* Slightly larger radius for modern look */
+			background: #ffffff;
+			color: #333;
+			font-size: 1rem;
+			font-weight: 500;
+			font-family: inherit;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			appearance: none;
+			/* Remove default browser styling */
+			background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+			/* Larger, bolder arrow */
+			background-repeat: no-repeat;
+			background-position: right 0.8rem center;
+			/* Adjusted arrow position */
+		}
+
+		/* Hover Effect */
+		.language-selector:hover {
+			border-color: #1d4ed8;
+			box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+			transform: translateY(-2px);
+		}
+
+		/* Focus State */
+		.language-selector:focus {
+			outline: none;
+			border-color: #1d4ed8;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+		}
+
+		/* Style for the <li> containing the language selector */
+		.nav-links li {
+			display: flex;
+			align-items: center;
+		}
+
+		/* Responsive Design for Mobile */
+		@media (max-width: 768px) {
+			.language-selector {
+				font-size: 1rem;
+				/* Larger font for better readability */
+				padding: 0.8rem 3rem 0.8rem 1.2rem;
+				/* Larger padding for touch targets */
+				width: 90%;
+				/* Slightly less than full width for aesthetic spacing */
+				max-width: 200px;
+				/* Cap width to avoid stretching */
+				border-radius: 10px;
+				/* Larger radius for mobile */
+				background-color: #f9fafb;
+				/* Subtle background for contrast in mobile menu */
+				background-position: right 1rem center;
+				/* Adjust arrow position */
+				border: 2px solid #3b82f6;
+				/* Bolder border for visibility */
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				/* Subtle shadow for depth */
+			}
+
+			.nav-links li {
+				justify-content: center;
+				/* Center the dropdown in mobile menu */
+				margin: 1rem 0;
+				/* Increased spacing for better separation */
+				padding: 0 1rem;
+				/* Add padding to the <li> for better touch area */
+			}
+
+			.nav-links.active .language-selector {
+				opacity: 1;
+				transform: translateY(0);
+				transition: opacity 0.3s ease, transform 0.3s ease;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.language-selector {
+				font-size: 0.95rem;
+				/* Slightly smaller but still readable */
+				padding: 0.7rem 2.8rem 0.7rem 1rem;
+				/* Adjusted padding for smaller screens */
+				width: 95%;
+				/* Slightly wider for smaller screens */
+				max-width: 180px;
+				background-position: right 0.8rem center;
+			}
+
+			.nav-links li {
+				margin: 0.8rem 0;
+				/* Slightly reduced spacing */
+			}
+		}
+	</style>
 </head>
+
 <body>
-    <div id="canvas-container"></div>
-    
-    <div class="content">
-        <h1>SHRAMIC</h1>
-        <p class="subtitle">Empowering Blue Collar Excellence</p>
-        <p class="coming-soon">COMING SOON</p>
-        <div class="loader">
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
-            </div>
-        </div>
-    </div>
+	<header>
+		<nav class="container">
+			<div class="logo">
+				<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+					xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 684 681" enable-background="new 0 0 684 681"
+					xml:space="preserve">
+					<path fill="#5E4074" opacity="1.000000" stroke="none" d="
+                    M3.000000,1.000000 
+                    C230.286728,1.000000 457.573456,1.000000 684.930054,1.000000 
+                    C684.930054,227.906815 684.930054,454.813660 684.930054,682.000000 
+                    C457.973206,682.000000 230.946304,682.000000 3.460329,681.540283 
+                    C3.000832,454.387054 3.000416,227.693527 3.000000,1.000000 
+                    M337.571472,238.114716 
+                    C339.122223,236.378860 340.594513,234.564713 342.236145,232.919556 
+                    C355.019135,220.109268 371.014099,214.770493 388.107941,229.937271 
+                    C394.345276,235.471420 402.204346,237.420898 410.418671,237.062836 
+                    C420.397766,236.627838 430.355621,235.710999 440.323914,235.020767 
+                    C475.544861,232.582016 510.767212,230.163605 545.986877,227.706284 
+                    C552.909180,227.223297 559.821777,226.601425 566.998657,226.022644 
+                    C566.998657,224.202988 567.094849,222.887543 566.984192,221.589737 
+                    C565.357605,202.513809 564.132446,183.390900 561.945129,164.378860 
+                    C559.329590,141.644958 538.301575,123.841385 515.772339,123.861526 
+                    C401.611786,123.963593 287.451080,123.996925 173.290512,123.910172 
+                    C148.749512,123.891525 127.378746,143.769592 125.892548,168.220627 
+                    C125.175980,180.009644 123.544762,191.740097 122.617645,203.519882 
+                    C120.645149,228.582367 117.783745,253.636627 117.244675,278.736298 
+                    C116.350594,320.365845 116.841530,362.029510 117.101120,403.676636 
+                    C117.173973,415.364471 118.478630,427.044617 119.204346,438.508392 
+                    C135.180328,435.274750 150.582474,431.832916 166.110107,429.105560 
+                    C181.668091,426.372864 197.391586,424.591461 212.968994,421.958099 
+                    C230.508804,418.993042 248.150879,416.297913 265.407471,412.087646 
+                    C282.396942,407.942505 300.274017,406.783508 316.020721,397.865814 
+                    C319.808807,395.720520 324.547241,395.202789 328.891266,394.105438 
+                    C332.449646,393.206573 333.302399,391.249573 331.224640,388.352325 
+                    C329.110596,385.404572 327.186737,381.891205 324.281616,380.019135 
+                    C314.941681,374.000549 305.135315,368.710419 295.644562,362.916962 
+                    C294.102966,361.975891 293.251190,359.904755 292.080566,358.355988 
+                    C294.129120,357.679169 296.597229,355.901672 298.160614,356.497650 
+                    C312.124329,361.820312 326.601959,366.332611 339.621979,373.467316 
+                    C359.202728,384.197174 367.331299,405.757050 362.359161,427.800446 
+                    C361.281128,432.579681 362.220673,437.122253 365.962158,440.105988 
+                    C370.449310,443.684357 371.574799,448.482941 372.769348,453.507904 
+                    C373.625671,457.110046 372.266510,459.578369 368.885223,460.436310 
+                    C362.622345,462.025330 356.304688,463.594635 349.912598,464.361603 
+                    C347.932648,464.599213 344.312988,462.651001 343.747711,460.941681 
+                    C342.330963,456.657928 341.239868,451.814545 341.788269,447.416351 
+                    C343.526306,433.476959 336.755829,425.130951 322.698395,425.070068 
+                    C320.704681,425.061432 318.663818,425.044281 316.722687,425.426666 
+                    C285.736023,431.531067 254.703720,437.423431 223.803116,443.939331 
+                    C197.812042,449.419922 171.998703,455.738770 146.061356,461.481781 
+                    C137.837769,463.302643 129.468353,464.464722 121.066261,465.945801 
+                    C122.734055,482.645294 124.321228,498.681854 125.940712,514.715149 
+                    C127.766991,532.795776 135.598297,546.984009 152.258255,555.551697 
+                    C160.195480,559.633667 168.666138,560.753479 177.420868,560.752747 
+                    C287.915894,560.743652 398.410950,560.748840 508.905975,560.747681 
+                    C534.713501,560.747375 560.948059,536.608398 562.948914,510.815186 
+                    C564.828796,486.580933 566.621216,462.338226 568.212280,438.083527 
+                    C571.115479,393.827393 571.670776,349.518402 570.631653,305.188599 
+                    C570.250183,288.914124 569.607666,272.645752 569.073425,256.039337 
+                    C552.669800,257.156891 536.922424,258.176331 521.183533,259.312866 
+                    C486.138184,261.843567 451.100220,264.478058 416.051239,266.956635 
+                    C409.706024,267.405396 404.493073,269.950104 401.695862,275.478210 
+                    C392.424011,293.801788 362.925293,297.389618 347.280334,288.187408 
+                    C345.404785,287.084229 343.066071,284.593262 343.181702,282.898254 
+                    C343.294922,281.237793 346.019104,279.079315 348.034760,278.352112 
+                    C353.960999,276.214233 360.136749,274.780273 366.151489,272.871185 
+                    C370.167847,271.596405 373.101562,269.138489 374.030518,264.683960 
+                    C375.155762,259.288269 374.774506,254.295258 370.327789,250.497543 
+                    C365.704376,246.548920 360.404480,245.317474 354.495056,247.341217 
+                    C349.000854,249.222748 343.526215,251.191696 337.940247,252.755051 
+                    C336.423309,253.179611 333.747528,252.848801 333.013733,251.839478 
+                    C332.071564,250.543594 331.934448,247.970276 332.557892,246.381958 
+                    C333.634003,243.640381 335.563751,241.233856 337.571472,238.114716 
+                    z" />
+					<path fill="#E2D2FF" opacity="1.000000" stroke="none" d="
+                    M337.353394,238.400726 
+                    C335.563751,241.233856 333.634003,243.640381 332.557892,246.381958 
+                    C331.934448,247.970276 332.071564,250.543594 333.013733,251.839478 
+                    C333.747528,252.848801 336.423309,253.179611 337.940247,252.755051 
+                    C343.526215,251.191696 349.000854,249.222748 354.495056,247.341217 
+                    C360.404480,245.317474 365.704376,246.548920 370.327789,250.497543 
+                    C374.774506,254.295258 375.155762,259.288269 374.030518,264.683960 
+                    C373.101562,269.138489 370.167847,271.596405 366.151489,272.871185 
+                    C360.136749,274.780273 353.960999,276.214233 348.034760,278.352112 
+                    C346.019104,279.079315 343.294922,281.237793 343.181702,282.898254 
+                    C343.066071,284.593262 345.404785,287.084229 347.280334,288.187408 
+                    C362.925293,297.389618 392.424011,293.801788 401.695862,275.478210 
+                    C404.493073,269.950104 409.706024,267.405396 416.051239,266.956635 
+                    C451.100220,264.478058 486.138184,261.843567 521.183533,259.312866 
+                    C536.922424,258.176331 552.669800,257.156891 569.073425,256.039337 
+                    C569.607666,272.645752 570.250183,288.914124 570.631653,305.188599 
+                    C571.670776,349.518402 571.115479,393.827393 568.212280,438.083527 
+                    C566.621216,462.338226 564.828796,486.580933 562.948914,510.815186 
+                    C560.948059,536.608398 534.713501,560.747375 508.905975,560.747681 
+                    C398.410950,560.748840 287.915894,560.743652 177.420868,560.752747 
+                    C168.666138,560.753479 160.195480,559.633667 152.258255,555.551697 
+                    C135.598297,546.984009 127.766991,532.795776 125.940712,514.715149 
+                    C124.321228,498.681854 122.734055,482.645294 121.066261,465.945801 
+                    C129.468353,464.464722 137.837769,463.302643 146.061356,461.481781 
+                    C171.998703,455.738770 197.812042,449.419922 223.803116,443.939331 
+                    C254.703720,437.423431 285.736023,431.531067 316.722687,425.426666 
+                    C318.663818,425.044281 320.704681,425.061432 322.698395,425.070068 
+                    C336.755829,425.130951 343.526306,433.476959 341.788269,447.416351 
+                    C341.239868,451.814545 342.330963,456.657928 343.747711,460.941681 
+                    C344.312988,462.651001 347.932648,464.599213 349.912598,464.361603 
+                    C356.304688,463.594635 362.622345,462.025330 368.885223,460.436310 
+                    C372.266510,459.578369 373.625671,457.110046 372.769348,453.507904 
+                    C371.574799,448.482941 370.449310,443.684357 365.962158,440.105988 
+                    C362.220673,437.122253 361.281128,432.579681 362.359161,427.800446 
+                    C367.331299,405.757050 359.202728,384.197174 339.621979,373.467316 
+                    C326.601959,366.332611 312.124329,361.820312 298.160614,356.497650 
+                    C296.597229,355.901672 294.129120,357.679169 292.080566,358.355957 
+                    C293.251190,359.904755 294.102966,361.975891 295.644562,362.916962 
+                    C305.135315,368.710419 314.941681,374.000549 324.281616,380.019135 
+                    C327.186737,381.891205 329.110596,385.404572 331.224640,388.352325 
+                    C333.302399,391.249573 332.449646,393.206573 328.891266,394.105438 
+                    C324.547241,395.202789 319.808807,395.720520 316.020721,397.865814 
+                    C300.274017,406.783508 282.396942,407.942505 265.407471,412.087646 
+                    C248.150879,416.297913 230.508804,418.993042 212.968994,421.958099 
+                    C197.391586,424.591461 181.668091,426.372864 166.110107,429.105560 
+                    C150.582474,431.832916 135.180328,435.274750 119.204346,438.508392 
+                    C118.478630,427.044617 117.173973,415.364471 117.101120,403.676636 
+                    C116.841530,362.029510 116.350594,320.365845 117.244675,278.736298 
+                    C117.783745,253.636627 120.645149,228.582367 122.617645,203.519882 
+                    C123.544762,191.740097 125.175980,180.009644 125.892548,168.220627 
+                    C127.378746,143.769592 148.749512,123.891525 173.290512,123.910172 
+                    C287.451080,123.996925 401.611786,123.963593 515.772339,123.861526 
+                    C538.301575,123.841385 559.329590,141.644958 561.945129,164.378860 
+                    C564.132446,183.390900 565.357605,202.513809 566.984192,221.589737 
+                    C567.094849,222.887543 566.998657,224.202988 566.998657,226.022644 
+                    C559.821777,226.601425 552.909180,227.223297 545.986877,227.706284 
+                    C510.767212,230.163605 475.544861,232.582016 440.323914,235.020767 
+                    C430.355621,235.710999 420.397766,236.627838 410.418671,237.062836 
+                    C402.204346,237.420898 394.345276,235.471420 388.107941,229.937271 
+                    C371.014099,214.770493 355.019135,220.109268 342.236145,232.919556 
+                    C340.594513,234.564713 339.122223,236.378860 337.353394,238.400726 
+                    z" />
+				</svg>
+				<div class="logo-text">
+					<span class="main" data-i18n="nav.shramic">Shramic</span>
+					<span class="sub" data-i18n="nav.builsiness">BUSINESS SYSTEM</span>
+				</div>
+			</div>
+			<ul class="nav-links">
+				<li><a href="#home" data-i18n="nav.home">Home</a></li>
+				<li><a href="#about" data-i18n="nav.about">About Us</a></li>
+				<li><a href="#services" data-i18n="nav.services">Services</a></li>
+				<li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+				<li>
+					<select class="language-selector" id="language-switch">
+						<option value="en">English</option>
+						<option value="hi">Hindi</option>
+						<option value="kn">Kannada</option>
+					</select>
+				</li>
+			</ul>
+			<div class="auth-buttons">
+				<a href="#" class="login">Log in</a>
+				<a href="#" class="register">register</a>
+			</div>
+			<button class="mobile-menu-btn">☰</button>
+		</nav>
+	</header>
 
-    <script>
-        // Three.js Scene Setup
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+	<main>
+		<section class="hero" id="home">
+			<div class="container">
+				<div class="hero-content">
+					<div class="hero-text">
+						<h1 data-i18n="hero.title1">Empowering Rural Business Through Digital Access</h1>
+						<p data-i18n="hero.text">Get expert help, buy equipment, and stay updated—all in one place.</p>
+						<a href="#services" class="cta-button" data-i18n="hero.cta">Explore Services</a>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        // Lighting
-        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
-        scene.add(ambientLight);
+		<section class="services" id="services">
+			<div class="container">
+				<div class="services-grid">
+					<div class="service-card">
+						<div class="service-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round"
+								stroke-linejoin="round">
+								<circle cx="8" cy="6" r="3" stroke-width="1.8" />
+								<circle cx="16" cy="6" r="3" stroke-width="1.8" />
+								<path d="M8 9v4a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3V9" />
+								<path class="fill-path" d="M6 16c0 2 2 3 6 3s6-1 6-3" />
+							</svg>
+						</div>
+						<h3 data-i18n="service.virtual">Virtual Experts</h3>
+						<p>Connect with experienced experts in agriculture, machinery, and oil development.</p>
+					</div>
+					<div class="service-card">
+						<div class="service-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round"
+								stroke-linejoin="round">
+								<path d="M12 6c-2 0-3 2-3 4s1 4 3 4 3-2 3-4-1-4-3-4z" class="fill-path" />
+								<path d="M9 10v8m6-8v8" />
+								<circle cx="8" cy="20" r="1" />
+								<circle cx="16" cy="20" r="1" />
+								<path d="M6 20h12" />
+							</svg>
+						</div>
+						<h3 data-i18n="service.agriculture">Agriculture Shops</h3>
+						<p>Buy farming tools, fertilizers, seeds, and more from trusted vendors.</p>
+					</div>
+					<div class="service-card">
+						<div class="service-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round"
+								stroke-linejoin="round">
+								<path d="M14 6l-6 6 6 6m-6-6h12" />
+								<path class="fill-path" d="M4 9v6h6V9z" />
+								<path d="M7 6v3m0 6v3" />
+							</svg>
+						</div>
+						<h3 data-i18n="service.construction">Construction Shops</h3>
+						<p>Access essential materials for fura housing, farming structures, and more.</p>
+					</div>
+					<div class="service-card">
+						<div class="service-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round"
+								stroke-linejoin="round">
+								<path d="M4 18h6l2-6h8v6" />
+								<circle cx="7" cy="18" r="2" class="fill-path" />
+								<circle cx="17" cy="18" r="2" class="fill-path" />
+								<path d="M12 12v-4h6l2 4" />
+							</svg>
+						</div>
+						<h3 data-i18n='service.vehicle'>Vehicle Agencies</h3>
+						<p>Browse or lease vehicles suitable for agriculture or transport needs.</p>
+					</div>
+					<div class="service-card">
+						<div class="service-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round"
+								stroke-linejoin="round">
+								<path d="M3 18h18" />
+								<path d="M6 12h6l3-6 3 12" class="fill-path" />
+								<path d="M10 6h4m-2 0v3m0 3v3" />
+							</svg>
+						</div>
+						<h3 data-i18n="service.market">Market Price Updater</h3>
+						<p>Get the latest prices on crops, materials, and fuel from local markets.</p>
+					</div>
+				</div>
+			</div>
+		</section>
 
-        const directionalLight = new THREE.DirectionalLight(0x1976d2, 1);
-        directionalLight.position.set(5, 5, 5);
-        scene.add(directionalLight);
+		<section class="cta-section">
+			<div class="container">
+				<h2 data-i18n="cta.title">Want to join the Shramic Network?</h2>
+				<a href="#" class="join-button" data-i18n="cta.button">Join Now</a>
+			</div>
+		</section>
+	</main>
 
-        const pointLight = new THREE.PointLight(0x42a5f5, 1);
-        pointLight.position.set(-5, 3, 0);
-        scene.add(pointLight);
+	<footer>
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-brand">shramic.connect.com</div>
+				<div class="footer-links">
+					<a href="#home" data-i18n="nav.home">Home</a>
+					<a href="#about" data-i18n="nav.about">About Us</a>
+					<a href="#services" data-i18n="nav.services">Services</a>
+					<a href="#contact" data-i18n="nav.contact">Contact</a>
+				</div>
+			</div>
+		</div>
+	</footer>
 
-        // Create 3D Models representing tools
-        const models = [];
+	<script>
+		// Translation object
+		const translations = {
+			en: {
+				'nav.shramic': 'Shramic',
+				'nav.builsiness': 'Business System',
+				'nav.home': 'Home',
+				'nav.about': 'About Us',
+				'nav.services': 'Services',
+				'nav.contact': 'Contact',
+				'hero.title1': 'Empowering Rural Business Through Digital Access',
+				'hero.text': 'Get expert help, buy equipment, and stay updated—all in one place.',
+				'hero.cta': 'Explore Services',
+				'service.virtual': 'Virtual Experts',
+				'service.agriculture': 'Agriculture Shops',
+				'service.construction': 'Construction Shops',
+				'service.vehicle': 'Vehicle Agencies',
+				'service.market': 'Market Price Updater',
+				'cta.title': 'Want to join the Shramic Network?',
+				'cta.button': 'Join Now',
+				'footer.brand': 'shramic.connect.com'
+			},
+			hi: {
+				'nav.shramic': 'श्रमिक',
+				'nav.builsiness': 'व्यवसाय प्रणाली',
+				'nav.home': 'होम',
+				'nav.about': 'हमारे बारे में',
+				'nav.services': 'सेवाएँ',
+				'nav.contact': 'संपर्क',
+				'hero.title1': 'डिजिटल पहुँच के माध्यम से ग्रामीण व्यवसाय को सशक्त बनाना',
+				'hero.text': 'विशेषज्ञ सहायता प्राप्त करें, उपकरण खरीदें, और एक ही स्थान पर अपडेट रहें।',
+				'hero.cta': 'सेवाएँ देखें',
+				'service.virtual': 'वर्चुअल विशेषज्ञ',
+				'service.agriculture': 'कृषि दुकानें',
+				'service.construction': 'निर्माण दुकानें',
+				'service.vehicle': 'वाहन एजेंसियाँ',
+				'service.market': 'बाजार मूल्य अपडेटर',
+				'cta.title': 'क्या आप श्रमिक नेटवर्क में शामिल होना चाहते हैं?',
+				'cta.button': 'अभी शामिल हों',
+				'footer.brand': 'shramic.connect.com'
+			},
+			kn: {
+				'nav.shramic': 'ಶ್ರಮಿಕ್',
+				'nav.builsiness': 'ವ್ಯವಹಾರ ವ್ಯವಸ್ಥೆ',
+				'nav.home': 'ಮನೆ',
+				'nav.about': 'ನಮ್ಮ ಬಗ್ಗೆ',
+				'nav.services': 'ಸೇವೆಗಳು',
+				'nav.contact': 'ಸಂಪರ್ಕ',
+				'hero.title1': 'ಡಿಜಿಟಲ್ ಪ್ರವೇಶದ ಮೂಲಕ ಗ್ರಾಮೀಣ ವ್ಯವಸಾಯವನ್ನು ಸಬಲೀಕರಣ',
+				'hero.text': 'ತಜ್ಞರ ಸಹಾಯವನ್ನು ಪಡೆಯಿರಿ, ಉಪಕರಣಗಳನ್ನು ಖರೀದಿಸಿ ಮತ್ತು ಒಂದೇ ಸ್ಥಳದಲ್ಲಿ ನವೀಕರಣವಾಗಿರಿ।',
+				'hero.cta': 'ಸೇವೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ',
+				'service.virtual': 'ವರ್ಚುವಲ್ ತಜ್ಞರು',
+				'service.agriculture': 'ಕೃಷಿ ಅಂಗಡಿಗಳು',
+				'service.construction': 'ನಿರ್ಮಾಣ ಅಂಗಡಿಗಳು',
+				'service.vehicle': 'ವಾಹನ ಏಜೆನ್ಸಿಗಳು',
+				'service.market': 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆ ನವೀಕರಕ',
+				'cta.title': 'ಶ್ರಾಮಿಕ ಜಾಲಕ್ಕೆ ಸೇರಲು ಬಯಸುವಿರಾ?',
+				'cta.button': 'ಈಗ ಸೇರಿ',
+				'footer.brand': 'shramic.connect.com'
+			}
+		};
 
-        // Wrench Model
-        function createWrench() {
-            const group = new THREE.Group();
-            
-            // Handle
-            const handleGeometry = new THREE.BoxGeometry(0.3, 2, 0.2);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0x1976d2,
-                emissive: 0x0d47a1,
-                emissiveIntensity: 0.2,
-                shininess: 100
-            });
-            const handle = new THREE.Mesh(handleGeometry, material);
-            group.add(handle);
-            
-            // Head
-            const headGeometry = new THREE.BoxGeometry(1, 0.3, 0.2);
-            const head = new THREE.Mesh(headGeometry, material);
-            head.position.y = 1;
-            group.add(head);
-            
-            // Opening
-            const openingGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.3, 6);
-            const opening = new THREE.Mesh(openingGeometry, material);
-            opening.position.set(0.65, 1, 0);
-            opening.rotation.x = Math.PI / 2;
-            group.add(opening);
-            
-            return group;
-        }
+		// Function to change language
+		function changeLanguage(lang) {
+			document.body.setAttribute('data-lang', lang);
+			document.querySelectorAll('[data-i18n]').forEach(element => {
+				const key = element.getAttribute('data-i18n');
+				if (translations[lang][key]) {
+					element.textContent = translations[lang][key];
+				}
+			});
+			// Trigger typing effect for hero title with updated language
+			const heroTitle = document.querySelector('.hero-text h1');
+			const titleText = translations[lang]['hero.title1'];
+			heroTitle.textContent = '';
+			charIndex = 0;
+			typeEffect(heroTitle, titleText);
+		}
 
-        // Hammer Model
-        function createHammer() {
-            const group = new THREE.Group();
-            
-            // Handle
-            const handleGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2);
-            const woodMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x8b4513,
-                emissive: 0x4a2511,
-                emissiveIntensity: 0.1
-            });
-            const handle = new THREE.Mesh(handleGeometry, woodMaterial);
-            group.add(handle);
-            
-            // Head
-            const headGeometry = new THREE.BoxGeometry(0.8, 0.4, 0.4);
-            const metalMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x42a5f5,
-                emissive: 0x1565c0,
-                emissiveIntensity: 0.2,
-                shininess: 150
-            });
-            const head = new THREE.Mesh(headGeometry, metalMaterial);
-            head.position.y = 1;
-            group.add(head);
-            
-            return group;
-        }
+		// Dynamic typing effect for hero title
+		const heroTitle = document.querySelector('.hero-text h1');
+		let charIndex = 0;
+		const typeEffect = (element, text) => {
+			if (charIndex < text.length) {
+				element.textContent += text.charAt(charIndex);
+				charIndex++;
+				setTimeout(() => typeEffect(element, text), 50);
+			}
+		};
 
-        // Gear Model
-        function createGear() {
-            const group = new THREE.Group();
-            
-            // Center
-            const centerGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 8);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0x1976d2,
-                emissive: 0x0d47a1,
-                emissiveIntensity: 0.3,
-                shininess: 100
-            });
-            const center = new THREE.Mesh(centerGeometry, material);
-            group.add(center);
-            
-            // Teeth
-            for (let i = 0; i < 8; i++) {
-                const toothGeometry = new THREE.BoxGeometry(0.2, 0.15, 0.3);
-                const tooth = new THREE.Mesh(toothGeometry, material);
-                const angle = (i / 8) * Math.PI * 2;
-                tooth.position.x = Math.cos(angle) * 0.4;
-                tooth.position.z = Math.sin(angle) * 0.4;
-                tooth.rotation.y = angle;
-                group.add(tooth);
-            }
-            
-            group.rotation.x = Math.PI / 2;
-            return group;
-        }
+		// Initialize typing effect on page load
+		window.addEventListener('load', () => {
+			const initialLang = document.getElementById('language-switch').value || 'en';
+			changeLanguage(initialLang);
+		});
 
-        // Add models to scene
-        const wrench = createWrench();
-        wrench.position.set(-3, 0, -5);
-        scene.add(wrench);
-        models.push(wrench);
+		const languageSwitch = document.getElementById('language-switch');
+		languageSwitch.addEventListener('change', (e) => {
+			changeLanguage(e.target.value);
+		});
 
-        const hammer = createHammer();
-        hammer.position.set(3, 0, -5);
-        scene.add(hammer);
-        models.push(hammer);
+		// Smooth scrolling for anchor links
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				const target = document.querySelector(this.getAttribute('href'));
+				if (target) {
+					target.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}
+			});
+		});
 
-        const gear1 = createGear();
-        gear1.position.set(0, 2, -5);
-        scene.add(gear1);
-        models.push(gear1);
+		// Mobile menu toggle
+		const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+		const navLinks = document.querySelector('.nav-links');
 
-        const gear2 = createGear();
-        gear2.position.set(-1.5, -2, -6);
-        gear2.scale.set(0.7, 0.7, 0.7);
-        scene.add(gear2);
-        models.push(gear2);
+		mobileMenuBtn.addEventListener('click', () => {
+			navLinks.classList.toggle('active');
+		});
 
-        const gear3 = createGear();
-        gear3.position.set(1.5, -1.5, -4);
-        gear3.scale.set(0.5, 0.5, 0.5);
-        scene.add(gear3);
-        models.push(gear3);
+		// Parallax effect for hero section
+		window.addEventListener('scroll', () => {
+			const scrolled = window.pageYOffset;
+			const hero = document.querySelector('.hero');
+			if (hero) {
+				const speed = scrolled * 0.5;
+				hero.style.transform = `translateY(${speed}px)`;
+			}
+		});
 
-        // Particle System
-        const particleCount = 50;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const velocities = new Float32Array(particleCount * 3);
+		// Intersection Observer for animation triggers
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: '0px 0px -50px 0px'
+		};
 
-        for (let i = 0; i < particleCount * 3; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 10;
-            positions[i + 1] = (Math.random() - 0.5) * 10;
-            positions[i + 2] = (Math.random() - 0.5) * 10;
-            
-            velocities[i] = (Math.random() - 0.5) * 0.01;
-            velocities[i + 1] = Math.random() * 0.01;
-            velocities[i + 2] = (Math.random() - 0.5) * 0.01;
-        }
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.style.opacity = '1';
+					entry.target.style.transform = 'translateY(0)';
+				}
+			});
+		}, observerOptions);
 
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0x42a5f5,
-            size: 0.05,
-            transparent: true,
-            opacity: 0.6
-        });
-        
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
+		document.querySelectorAll('.service-card').forEach(card => {
+			card.style.opacity = '0';
+			card.style.transform = 'translateY(30px)';
+			card.style.transition = 'all 0.6s ease';
+			observer.observe(card);
+		});
 
-        camera.position.z = 5;
-
-        // Animation
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Rotate tools
-            wrench.rotation.x += 0.005;
-            wrench.rotation.y += 0.01;
-            wrench.position.y = Math.sin(Date.now() * 0.001) * 0.5;
-
-            hammer.rotation.x += 0.008;
-            hammer.rotation.z += 0.005;
-            hammer.position.y = Math.sin(Date.now() * 0.001 + 1) * 0.5;
-
-            gear1.rotation.z += 0.02;
-            gear2.rotation.z -= 0.03;
-            gear3.rotation.z += 0.04;
-
-            // Animate particles
-            const positions = particles.attributes.position.array;
-            for (let i = 0; i < particleCount * 3; i += 3) {
-                positions[i] += velocities[i];
-                positions[i + 1] += velocities[i + 1];
-                positions[i + 2] += velocities[i + 2];
-
-                if (positions[i + 1] > 5) {
-                    positions[i + 1] = -5;
-                }
-            }
-            particles.attributes.position.needsUpdate = true;
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
+		document.querySelectorAll('.service-card').forEach(card => {
+			card.addEventListener('mouseenter', function () {
+				this.style.transform = 'translateY(-8px) scale(1.02)';
+			});
+			card.addEventListener('mouseleave', function () {
+				this.style.transform = 'translateY(0) scale(1)';
+			});
+		});
+	</script>
 </body>
+
 </html>
