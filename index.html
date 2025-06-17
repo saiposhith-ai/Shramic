@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shramic.com - Coming Soon</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Montserrat:wght@300;400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: #0a1929;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            color: white;
+        }
+
+        h1 {
+            font-family: 'Oxanium', sans-serif;
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            background: linear-gradient(45deg, #1976d2, #42a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #90caf9;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .coming-soon {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(25, 118, 210, 0.8);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
+            font-weight: 700;
+            letter-spacing: 4px;
+        }
+
+        .loader {
+            margin-top: 2rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards;
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #1976d2, #42a5f5);
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(25, 118, 210, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(66, 165, 245, 0.8)); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <h1>SHRAMIC</h1>
+        <p class="subtitle">Empowering Blue Collar Excellence</p>
+        <p class="coming-soon">COMING SOON</p>
+        <div class="loader">
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Three.js Scene Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0x1976d2, 1);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0x42a5f5, 1);
+        pointLight.position.set(-5, 3, 0);
+        scene.add(pointLight);
+
+        // Create 3D Models representing tools
+        const models = [];
+
+        // Wrench Model
+        function createWrench() {
+            const group = new THREE.Group();
+            
+            // Handle
+            const handleGeometry = new THREE.BoxGeometry(0.3, 2, 0.2);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x1976d2,
+                emissive: 0x0d47a1,
+                emissiveIntensity: 0.2,
+                shininess: 100
+            });
+            const handle = new THREE.Mesh(handleGeometry, material);
+            group.add(handle);
+            
+            // Head
+            const headGeometry = new THREE.BoxGeometry(1, 0.3, 0.2);
+            const head = new THREE.Mesh(headGeometry, material);
+            head.position.y = 1;
+            group.add(head);
+            
+            // Opening
+            const openingGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.3, 6);
+            const opening = new THREE.Mesh(openingGeometry, material);
+            opening.position.set(0.65, 1, 0);
+            opening.rotation.x = Math.PI / 2;
+            group.add(opening);
+            
+            return group;
+        }
+
+        // Hammer Model
+        function createHammer() {
+            const group = new THREE.Group();
+            
+            // Handle
+            const handleGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2);
+            const woodMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x8b4513,
+                emissive: 0x4a2511,
+                emissiveIntensity: 0.1
+            });
+            const handle = new THREE.Mesh(handleGeometry, woodMaterial);
+            group.add(handle);
+            
+            // Head
+            const headGeometry = new THREE.BoxGeometry(0.8, 0.4, 0.4);
+            const metalMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x42a5f5,
+                emissive: 0x1565c0,
+                emissiveIntensity: 0.2,
+                shininess: 150
+            });
+            const head = new THREE.Mesh(headGeometry, metalMaterial);
+            head.position.y = 1;
+            group.add(head);
+            
+            return group;
+        }
+
+        // Gear Model
+        function createGear() {
+            const group = new THREE.Group();
+            
+            // Center
+            const centerGeometry = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 8);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: 0x1976d2,
+                emissive: 0x0d47a1,
+                emissiveIntensity: 0.3,
+                shininess: 100
+            });
+            const center = new THREE.Mesh(centerGeometry, material);
+            group.add(center);
+            
+            // Teeth
+            for (let i = 0; i < 8; i++) {
+                const toothGeometry = new THREE.BoxGeometry(0.2, 0.15, 0.3);
+                const tooth = new THREE.Mesh(toothGeometry, material);
+                const angle = (i / 8) * Math.PI * 2;
+                tooth.position.x = Math.cos(angle) * 0.4;
+                tooth.position.z = Math.sin(angle) * 0.4;
+                tooth.rotation.y = angle;
+                group.add(tooth);
+            }
+            
+            group.rotation.x = Math.PI / 2;
+            return group;
+        }
+
+        // Add models to scene
+        const wrench = createWrench();
+        wrench.position.set(-3, 0, -5);
+        scene.add(wrench);
+        models.push(wrench);
+
+        const hammer = createHammer();
+        hammer.position.set(3, 0, -5);
+        scene.add(hammer);
+        models.push(hammer);
+
+        const gear1 = createGear();
+        gear1.position.set(0, 2, -5);
+        scene.add(gear1);
+        models.push(gear1);
+
+        const gear2 = createGear();
+        gear2.position.set(-1.5, -2, -6);
+        gear2.scale.set(0.7, 0.7, 0.7);
+        scene.add(gear2);
+        models.push(gear2);
+
+        const gear3 = createGear();
+        gear3.position.set(1.5, -1.5, -4);
+        gear3.scale.set(0.5, 0.5, 0.5);
+        scene.add(gear3);
+        models.push(gear3);
+
+        // Particle System
+        const particleCount = 50;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 10;
+            positions[i + 1] = (Math.random() - 0.5) * 10;
+            positions[i + 2] = (Math.random() - 0.5) * 10;
+            
+            velocities[i] = (Math.random() - 0.5) * 0.01;
+            velocities[i + 1] = Math.random() * 0.01;
+            velocities[i + 2] = (Math.random() - 0.5) * 0.01;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x42a5f5,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.6
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        camera.position.z = 5;
+
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate tools
+            wrench.rotation.x += 0.005;
+            wrench.rotation.y += 0.01;
+            wrench.position.y = Math.sin(Date.now() * 0.001) * 0.5;
+
+            hammer.rotation.x += 0.008;
+            hammer.rotation.z += 0.005;
+            hammer.position.y = Math.sin(Date.now() * 0.001 + 1) * 0.5;
+
+            gear1.rotation.z += 0.02;
+            gear2.rotation.z -= 0.03;
+            gear3.rotation.z += 0.04;
+
+            // Animate particles
+            const positions = particles.attributes.position.array;
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] += velocities[i];
+                positions[i + 1] += velocities[i + 1];
+                positions[i + 2] += velocities[i + 2];
+
+                if (positions[i + 1] > 5) {
+                    positions[i + 1] = -5;
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
