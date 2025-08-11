@@ -14,6 +14,12 @@
             overflow-x: hidden;
         }
         
+        /* Enhanced responsive breakpoints */
+        @media (max-width: 320px) {
+            .text-xs-responsive { font-size: 0.75rem; }
+            .px-xs { padding-left: 0.5rem; padding-right: 0.5rem; }
+        }
+        
         .bg-primary { background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); }
         .bg-secondary { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
         .bg-accent { background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%); }
@@ -33,6 +39,7 @@
         .glass-effect {
             background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); /* Safari support */
             border: 1px solid rgba(79, 70, 229, 0.3);
         }
         
@@ -57,9 +64,19 @@
             left: 100%;
         }
         
-        .card-hover:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.4);
+        /* Enhanced responsive hover effects */
+        @media (hover: hover) {
+            .card-hover:hover {
+                transform: translateY(-15px) scale(1.02);
+                box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.4);
+            }
+        }
+        
+        @media (hover: none) {
+            .card-hover:active {
+                transform: translateY(-5px) scale(1.01);
+                box-shadow: 0 15px 30px -8px rgba(79, 70, 229, 0.3);
+            }
         }
         
         .fade-in {
@@ -94,6 +111,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            touch-action: manipulation; /* Better touch support */
         }
         
         .btn::before {
@@ -109,18 +127,37 @@
             transition: width 0.6s, height 0.6s;
         }
         
-        .btn:hover::before {
+        .btn:hover::before,
+        .btn:focus::before {
             width: 300px;
             height: 300px;
         }
         
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px -12px rgba(79, 70, 229, 0.5);
+        @media (hover: hover) {
+            .btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 20px 40px -12px rgba(79, 70, 229, 0.5);
+            }
         }
         
         .floating {
             animation: floating 3s ease-in-out infinite;
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .floating {
+                animation: none;
+            }
+            .fade-in {
+                transition: opacity 0.3s ease;
+                transform: none;
+            }
+            .slide-in-left,
+            .slide-in-right {
+                transition: opacity 0.3s ease;
+                transform: none;
+            }
         }
         
         @keyframes floating {
@@ -187,9 +224,97 @@
         }
         
         .section-divider {
-            height: 100px;
+            height: clamp(60px, 8vw, 100px);
             background: linear-gradient(135deg, #0f172a 0%, #4f46e5 50%, #0f172a 100%);
             clip-path: polygon(0 0, 100% 0%, 85% 100%, 15% 100%);
+        }
+        
+        /* Enhanced responsive typography */
+        .responsive-title {
+            font-size: clamp(2rem, 8vw, 4.5rem);
+            line-height: 1.1;
+        }
+        
+        .responsive-subtitle {
+            font-size: clamp(1.25rem, 4vw, 2rem);
+            line-height: 1.3;
+        }
+        
+        .responsive-text {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            line-height: 1.6;
+        }
+        
+        /* Video responsive styles */
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 16/9;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .mobile-spacing {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+            
+            .mobile-text-center {
+                text-align: center;
+            }
+            
+            .card-hover:hover {
+                transform: none;
+                box-shadow: none;
+            }
+            
+            .section-divider {
+                height: 40px;
+            }
+        }
+        
+        /* iOS Safari fixes */
+        @supports (-webkit-touch-callout: none) {
+            .glass-effect {
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+            }
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .glass-effect {
+                background: rgba(15, 23, 42, 0.95);
+                border: 2px solid rgba(79, 70, 229, 0.8);
+            }
+        }
+        
+        /* Focus styles for accessibility */
+        .btn:focus,
+        a:focus {
+            outline: 2px solid #6366f1;
+            outline-offset: 2px;
+        }
+        
+        /* Print styles */
+        @media print {
+            .gradient-bg,
+            .glass-effect {
+                background: white !important;
+                color: black !important;
+            }
+            
+            .hero-title {
+                -webkit-text-fill-color: black !important;
+                background: none !important;
+            }
         }
     </style>
 </head>
@@ -200,23 +325,23 @@
     <!-- Header -->
     <header class="glass-effect fixed top-0 left-0 right-0 z-50 shadow-lg">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-16 sm:h-20">
                 <div class="flex-shrink-0">
-                    <a href="#" class="text-3xl font-black text-glow hero-title">Shramic</a>
+                    <a href="#" class="text-2xl sm:text-3xl font-black text-glow hero-title">Shramic</a>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#for-workers" class="text-slate-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">For Workers</a>
-                        <a href="#for-employers" class="text-slate-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">For Employers</a>
-                        <a href="#why-shramic" class="text-slate-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">Why Shramic?</a>
-                        <a href="#testimonials" class="text-slate-300 hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">Testimonials</a>
+                    <div class="ml-10 flex items-baseline space-x-4 lg:space-x-8">
+                        <a href="#for-workers" class="text-slate-300 hover:text-indigo-400 px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">For Workers</a>
+                        <a href="#for-employers" class="text-slate-300 hover:text-indigo-400 px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">For Employers</a>
+                        <a href="#why-shramic" class="text-slate-300 hover:text-indigo-400 px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">Why Shramic?</a>
+                        <a href="#testimonials" class="text-slate-300 hover:text-indigo-400 px-2 lg:px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 hover:bg-indigo-500/20">Testimonials</a>
                     </div>
                 </div>
                 <div class="hidden md:block">
-                     <a href="#cta" class="bg-primary text-white px-6 py-3 rounded-full text-sm font-bold btn relative z-10">Get Started</a>
+                     <a href="#cta" class="bg-primary text-white px-4 lg:px-6 py-2 lg:py-3 rounded-full text-sm font-bold btn relative z-10">Get Started</a>
                 </div>
                 <div class="-mr-2 flex md:hidden">
-                    <button id="mobile-menu-button" type="button" class="glass-effect inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-indigo-400 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-300">
+                    <button id="mobile-menu-button" type="button" class="glass-effect inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-indigo-400 hover:bg-indigo-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-800 focus:ring-indigo-500 transition-all duration-300" aria-expanded="false" aria-label="Open main menu">
                         <span class="sr-only">Open main menu</span>
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -239,38 +364,40 @@
 
     <main class="relative z-10">
         <!-- Hero Section -->
-        <section class="pt-32 md:pt-40 pb-32 gradient-bg relative overflow-hidden">
+        <section class="pt-24 sm:pt-32 md:pt-40 pb-16 sm:pb-24 md:pb-32 gradient-bg relative overflow-hidden">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                 <div class="max-w-5xl mx-auto">
-                    <h1 class="text-5xl md:text-7xl font-black hero-title leading-tight mb-6 fade-in">Building India's Most Trusted Workforce.</h1>
-                    <p class="text-xl md:text-2xl text-slate-300 mb-12 max-w-3xl mx-auto fade-in leading-relaxed" style="transition-delay: 0.2s;">We connect thoroughly verified, skilled workers with quality employers. Find a reliable job. Hire a dependable team.</p>
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-6 fade-in" style="transition-delay: 0.4s;">
-                        <a href="#for-workers" class="w-full sm:w-auto bg-primary text-white px-10 py-5 rounded-full font-bold text-lg btn shadow-2xl relative z-10">Find a Job</a>
-                        <a href="#for-employers" class="w-full sm:w-auto glass-effect text-white px-10 py-5 rounded-full font-bold text-lg btn shadow-2xl relative z-10">Post a Job</a>
+                    <h1 class="responsive-title font-black hero-title leading-tight mb-4 sm:mb-6 fade-in">Building India's Most Trusted Workforce.</h1>
+                    <p class="responsive-subtitle text-slate-300 mb-8 sm:mb-12 max-w-3xl mx-auto fade-in leading-relaxed" style="transition-delay: 0.2s;">We connect thoroughly verified, skilled workers with quality employers. Find a reliable job. Hire a dependable team.</p>
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 fade-in" style="transition-delay: 0.4s;">
+                        <a href="#for-workers" class="w-full sm:w-auto bg-primary text-white px-6 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg btn shadow-2xl relative z-10">Find a Job</a>
+                        <a href="#for-employers" class="w-full sm:w-auto glass-effect text-white px-6 sm:px-10 py-4 sm:py-5 rounded-full font-bold text-base sm:text-lg btn shadow-2xl relative z-10">Post a Job</a>
                     </div>
                 </div>
-                 <div class="mt-20 fade-in floating" style="transition-delay: 0.6s;">
+                 <div class="mt-12 sm:mt-20 fade-in floating" style="transition-delay: 0.6s;">
                     <div class="relative">
-                        <div class="absolute inset-0 bg-indigo-500 rounded-3xl blur-3xl opacity-30 pulse-ring"></div>
-                        <video 
-                            class="rounded-3xl shadow-2xl mx-auto relative z-10 border border-indigo-500/30 w-full max-w-6xl"
-                            autoplay 
-                            muted 
-                            loop 
-                            playsinline
-                            controls
-                            poster="https://placehold.co/1400x700/1e293b/4f46e5?text=Loading+Video"
-                        >
-                            <!-- Replace these URLs with your actual video URLs -->
-                            <source src="emp1.mp4" type="video/mp4">
-                            <source src="YOUR_VIDEO_URL.webm" type="video/webm">
-                            <!-- Fallback for browsers that don't support video -->
-                            <img src="https://placehold.co/1400x700/1e293b/4f46e5?text=Empowering+Connections" alt="Illustration of a worker and employer shaking hands" class="rounded-3xl shadow-2xl mx-auto">
-                        </video>
+                        <div class="absolute inset-0 bg-indigo-500 rounded-2xl sm:rounded-3xl blur-2xl sm:blur-3xl opacity-30 pulse-ring"></div>
+                        <div class="video-container">
+                            <video 
+                                class="rounded-2xl sm:rounded-3xl shadow-2xl mx-auto relative z-10 border border-indigo-500/30 w-full"
+                                autoplay 
+                                muted 
+                                loop 
+                                playsinline
+                                controls
+                                poster="https://placehold.co/1400x700/1e293b/4f46e5?text=Loading+Video"
+                            >
+                                <!-- Replace these URLs with your actual video URLs -->
+                                <source src="emp1.mp4" type="video/mp4">
+                                <source src="YOUR_VIDEO_URL.webm" type="video/webm">
+                                <!-- Fallback for browsers that don't support video -->
+                                <img src="https://placehold.co/1400x700/1e293b/4f46e5?text=Empowering+Connections" alt="Illustration of a worker and employer shaking hands" class="rounded-2xl sm:rounded-3xl shadow-2xl mx-auto w-full">
+                            </video>
+                        </div>
                         <!-- Play button overlay -->
                         <div class="absolute inset-0 flex items-center justify-center z-20 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                            <button class="bg-white/20 backdrop-blur-sm rounded-full p-6 hover:bg-white/30 transition-all duration-300 group">
-                                <svg class="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                            <button class="bg-white/20 backdrop-blur-sm rounded-full p-4 sm:p-6 hover:bg-white/30 transition-all duration-300 group" aria-label="Play video">
+                                <svg class="w-8 h-8 sm:w-12 sm:h-12 text-white group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M8 5v14l11-7z"/>
                                 </svg>
                             </button>
@@ -283,44 +410,44 @@
         <div class="section-divider"></div>
 
         <!-- For Workers Section -->
-        <section id="for-workers" class="py-32 bg-slate-900 relative">
+        <section id="for-workers" class="py-16 sm:py-24 md:py-32 bg-slate-900 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-6xl font-black text-white fade-in mb-4">आपकी मेहनत, आपका सम्मान।</h2>
-                    <p class="text-2xl text-indigo-300 fade-in" style="transition-delay: 0.2s;">सुरक्षित नौकरी, सही दाम। (Your Hard Work, Your Respect. Secure Job, Fair Price.)</p>
+                <div class="text-center mb-12 sm:mb-16">
+                    <h2 class="responsive-title font-black text-white fade-in mb-4">आपकी मेहनत, आपका सम्मान।</h2>
+                    <p class="responsive-subtitle text-indigo-300 fade-in" style="transition-delay: 0.2s;">सुरक्षित नौकरी, सही दाम। (Your Hard Work, Your Respect. Secure Job, Fair Price.)</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                     <!-- Card 1 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden">
-                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden">
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Verified Jobs Only</h3>
-                        <p class="text-slate-300 leading-relaxed">Apply with confidence. We vet every company for safety, reliability, and fair treatment. Say goodbye to fake jobs.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Verified Jobs Only</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Apply with confidence. We vet every company for safety, reliability, and fair treatment. Say goodbye to fake jobs.</p>
                     </div>
                     <!-- Card 2 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.1s;">
-                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7.014A8.003 8.003 0 0112 3c1.398 0 2.743.57 3.714 1.543C18.5 6.5 19 9 19 10c2 1 2.657 1.657 2.657 1.657a8 8 0 01-4.001 7z"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.1s;">
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7.014A8.003 8.003 0 0112 3c1.398 0 2.743.57 3.714 1.543C18.5 6.5 19 9 19 10c2 1 2.657 1.657 2.657 1.657a8 8 0 01-4.001 7z"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">No Middlemen, No Fees</h3>
-                        <p class="text-slate-300 leading-relaxed">Connect directly with HR. Shramic is always 100% free for workers. You keep the full salary you earn.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">No Middlemen, No Fees</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Connect directly with HR. Shramic is always 100% free for workers. You keep the full salary you earn.</p>
                     </div>
                     <!-- Card 3 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.2s;">
-                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.2s;">
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Build Your Career</h3>
-                        <p class="text-slate-300 leading-relaxed">Access free, certified courses to learn new skills and qualify for higher-paying roles on our platform.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Build Your Career</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Access free, certified courses to learn new skills and qualify for higher-paying roles on our platform.</p>
                     </div>
                     <!-- Card 4 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.3s;">
-                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.3s;">
+                        <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Financial Security</h3>
-                        <p class="text-slate-300 leading-relaxed">Build your verified work history to unlock access to fair-interest loans and insurance from partner banks.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Financial Security</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Build your verified work history to unlock access to fair-interest loans and insurance from partner banks.</p>
                     </div>
                 </div>
             </div>
@@ -329,44 +456,44 @@
         <div class="section-divider transform rotate-180"></div>
 
         <!-- For Employers Section -->
-        <section id="for-employers" class="py-32 bg-gradient-to-br from-slate-800 to-slate-900 relative">
+        <section id="for-employers" class="py-16 sm:py-24 md:py-32 bg-gradient-to-br from-slate-800 to-slate-900 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-6xl font-black text-white fade-in mb-4">End the Revolving Door. Hire Talent That Stays.</h2>
-                    <p class="text-2xl text-indigo-300 fade-in" style="transition-delay: 0.2s;">Access a pre-verified, skilled, and motivated workforce.</p>
+                <div class="text-center mb-12 sm:mb-16">
+                    <h2 class="responsive-title font-black text-white fade-in mb-4">End the Revolving Door. Hire Talent That Stays.</h2>
+                    <p class="responsive-subtitle text-indigo-300 fade-in" style="transition-delay: 0.2s;">Access a pre-verified, skilled, and motivated workforce.</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                     <!-- Card 1 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden">
-                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden">
+                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">360° Verification</h3>
-                        <p class="text-slate-300 leading-relaxed">Go beyond a basic ID check. Our mandatory process includes background screening, skill validation, and reference checks.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">360° Verification</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Go beyond a basic ID check. Our mandatory process includes background screening, skill validation, and reference checks.</p>
                     </div>
                     <!-- Card 2 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.1s;">
-                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.1s;">
+                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Reduce Attrition</h3>
-                        <p class="text-slate-300 leading-relaxed">Hire motivated workers vetted for long-term fit. Our clients see a significant reduction in churn, saving costs.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Reduce Attrition</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Hire motivated workers vetted for long-term fit. Our clients see a significant reduction in churn, saving costs.</p>
                     </div>
                     <!-- Card 3 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.2s;">
-                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.2s;">
+                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Access a Skilled Pipeline</h3>
-                        <p class="text-slate-300 leading-relaxed">Stop sorting through unqualified applicants. Filter for candidates with specific, certified skills, ready to be productive.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Access a Skilled Pipeline</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Stop sorting through unqualified applicants. Filter for candidates with specific, certified skills, ready to be productive.</p>
                     </div>
                     <!-- Card 4 -->
-                    <div class="glass-effect p-8 rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.3s;">
-                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-2xl h-16 w-16 flex items-center justify-center mb-6 shadow-lg">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <div class="glass-effect p-6 sm:p-8 rounded-2xl sm:rounded-3xl card-hover fade-in relative overflow-hidden" style="transition-delay: 0.3s;">
+                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-xl sm:rounded-2xl h-12 w-12 sm:h-16 sm:w-16 flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                            <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold text-white mb-4">Simplified Compliance</h3>
-                        <p class="text-slate-300 leading-relaxed">Hire with confidence. All workers are guided through securing necessary documentation for formal, compliant employment.</p>
+                        <h3 class="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Simplified Compliance</h3>
+                        <p class="text-slate-300 leading-relaxed responsive-text">Hire with confidence. All workers are guided through securing necessary documentation for formal, compliant employment.</p>
                     </div>
                 </div>
             </div>
@@ -375,43 +502,45 @@
         <div class="section-divider"></div>
 
         <!-- Why Shramic is Different Section -->
-        <section id="why-shramic" class="py-32 bg-slate-900 relative">
+        <section id="why-shramic" class="py-16 sm:py-24 md:py-32 bg-slate-900 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex flex-col lg:flex-row items-center gap-16">
-                    <div class="lg:w-1/2 slide-in-left">
+                <div class="flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-16">
+                    <div class="w-full lg:w-1/2 slide-in-left">
                         <div class="relative">
-                            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl blur-2xl opacity-20"></div>
-                            <video 
-                                class="rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30 w-full"
-                                autoplay 
-                                muted 
-                                loop 
-                                playsinline
-                                controls
-                                poster="https://placehold.co/800x600/1e293b/4f46e5?text=Loading+Video"
-                            >
-                                <!-- Replace these URLs with your actual video URLs -->
-                                <source src="qt.mp4" type="video/mp4">
-                                <source src="YOUR_SECOND_VIDEO_URL.webm" type="video/webm">
-                                <!-- Fallback for browsers that don't support video -->
-                                <img src="https://placehold.co/800x600/1e293b/4f46e5?text=Quality+and+Trust" alt="A team of confident blue-collar workers" class="rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30">
-                            </video>
+                            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl sm:rounded-3xl blur-xl sm:blur-2xl opacity-20"></div>
+                            <div class="video-container">
+                                <video 
+                                    class="rounded-2xl sm:rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30 w-full"
+                                    autoplay 
+                                    muted 
+                                    loop 
+                                    playsinline
+                                    controls
+                                    poster="https://placehold.co/800x600/1e293b/4f46e5?text=Loading+Video"
+                                >
+                                    <!-- Replace these URLs with your actual video URLs -->
+                                    <source src="qt.mp4" type="video/mp4">
+                                    <source src="YOUR_SECOND_VIDEO_URL.webm" type="video/webm">
+                                    <!-- Fallback for browsers that don't support video -->
+                                    <img src="https://placehold.co/800x600/1e293b/4f46e5?text=Quality+and+Trust" alt="A team of confident blue-collar workers" class="rounded-2xl sm:rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30 w-full">
+                                </video>
+                            </div>
                             <!-- Play button overlay for second video -->
                             <div class="absolute inset-0 flex items-center justify-center z-20 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                <button class="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-all duration-300 group">
-                                    <svg class="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                                <button class="bg-white/20 backdrop-blur-sm rounded-full p-3 sm:p-4 hover:bg-white/30 transition-all duration-300 group" aria-label="Play video">
+                                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M8 5v14l11-7z"/>
                                     </svg>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <div class="lg:w-1/2 slide-in-right" style="transition-delay: 0.2s;">
-                        <span class="text-indigo-400 font-bold uppercase tracking-wider text-lg">Our Philosophy</span>
-                        <h2 class="text-4xl md:text-6xl font-black text-white mt-4 mb-6 leading-tight">Quality Over Quantity. Reliability Over Speed.</h2>
-                        <div class="space-y-6 text-lg leading-relaxed">
+                    <div class="w-full lg:w-1/2 slide-in-right mobile-text-center lg:text-left" style="transition-delay: 0.2s;">
+                        <span class="text-indigo-400 font-bold uppercase tracking-wider text-sm sm:text-lg">Our Philosophy</span>
+                        <h2 class="responsive-title font-black text-white mt-4 mb-4 sm:mb-6 leading-tight">Quality Over Quantity. Reliability Over Speed.</h2>
+                        <div class="space-y-4 sm:space-y-6 responsive-text leading-relaxed">
                             <p class="text-slate-300">Other job portals are built for volume. They connect millions, but the chaos and uncertainty of the informal market remain. The result is a cycle of high attrition, persistent skill gaps, and endless hiring.</p>
-                            <p class="text-indigo-300 font-bold text-xl">Shramic is different. We are a curated ecosystem, not a digital crowd.</p>
+                            <p class="text-indigo-300 font-bold text-lg sm:text-xl">Shramic is different. We are a curated ecosystem, not a digital crowd.</p>
                             <p class="text-slate-300">We believe one great, dependable hire is infinitely more valuable than ten fast, uncertain ones. Our rigorous verification and unwavering commitment to worker well-being create a virtuous cycle: respected workers are motivated, and motivated workers build great companies. We're not just filling positions; we're building the foundation of a more reliable workforce.</p>
                         </div>
                     </div>
@@ -422,40 +551,40 @@
         <div class="section-divider transform rotate-180"></div>
 
         <!-- Testimonials Section -->
-        <section id="testimonials" class="py-32 bg-gradient-to-br from-slate-800 to-indigo-900 relative">
+        <section id="testimonials" class="py-16 sm:py-24 md:py-32 bg-gradient-to-br from-slate-800 to-indigo-900 relative">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-6xl font-black text-white fade-in mb-4">Trusted by Workers and Employers</h2>
-                    <p class="text-2xl text-indigo-300 fade-in" style="transition-delay: 0.2s;">Real stories from the Shramic community.</p>
+                <div class="text-center mb-12 sm:mb-16">
+                    <h2 class="responsive-title font-black text-white fade-in mb-4">Trusted by Workers and Employers</h2>
+                    <p class="responsive-subtitle text-indigo-300 fade-in" style="transition-delay: 0.2s;">Real stories from the Shramic community.</p>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
                     <!-- Worker Testimonial -->
-                    <div class="glass-effect p-10 rounded-3xl shadow-2xl fade-in card-hover relative overflow-hidden">
-                        <div class="flex items-center mb-8">
-                            <div class="relative">
-                                <img class="w-20 h-20 rounded-2xl mr-6 object-cover border-2 border-indigo-500" src="https://placehold.co/100x100/3B82F6/FFFFFF?text=W" alt="Worker photo">
-                                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div class="glass-effect p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl shadow-2xl fade-in card-hover relative overflow-hidden">
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start mb-6 sm:mb-8">
+                            <div class="relative mb-4 sm:mb-0 sm:mr-6">
+                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl object-cover border-2 border-indigo-500" src="https://placehold.co/100x100/3B82F6/FFFFFF?text=W" alt="Worker photo">
+                                <div class="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full border-2 border-white"></div>
                             </div>
-                            <div>
-                                <p class="font-bold text-2xl text-white">Ramesh Kumar</p>
-                                <p class="text-indigo-300 text-lg">Skilled Electrician</p>
+                            <div class="text-center sm:text-left">
+                                <p class="font-bold text-xl sm:text-2xl text-white">Ramesh Kumar</p>
+                                <p class="text-indigo-300 text-base sm:text-lg">Skilled Electrician</p>
                             </div>
                         </div>
-                        <p class="text-slate-300 italic text-lg leading-relaxed">"Before Shramic, finding work was stressful and relied on contractors who took a cut. With Shramic, I found a safe job directly with a good company. For the first time, I have a PF account and feel like I have a real career."</p>
+                        <p class="text-slate-300 italic responsive-text leading-relaxed text-center sm:text-left">"Before Shramic, finding work was stressful and relied on contractors who took a cut. With Shramic, I found a safe job directly with a good company. For the first time, I have a PF account and feel like I have a real career."</p>
                     </div>
                     <!-- Employer Testimonial -->
-                    <div class="glass-effect p-10 rounded-3xl shadow-2xl fade-in card-hover relative overflow-hidden" style="transition-delay: 0.2s;">
-                        <div class="flex items-center mb-8">
-                            <div class="relative">
-                                <img class="w-20 h-20 rounded-2xl mr-6 object-cover border-2 border-purple-500" src="https://placehold.co/100x100/1E293B/FFFFFF?text=E" alt="Employer photo">
-                                <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 rounded-full border-2 border-white"></div>
+                    <div class="glass-effect p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl shadow-2xl fade-in card-hover relative overflow-hidden" style="transition-delay: 0.2s;">
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start mb-6 sm:mb-8">
+                            <div class="relative mb-4 sm:mb-0 sm:mr-6">
+                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl object-cover border-2 border-purple-500" src="https://placehold.co/100x100/1E293B/FFFFFF?text=E" alt="Employer photo">
+                                <div class="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full border-2 border-white"></div>
                             </div>
-                            <div>
-                                <p class="font-bold text-2xl text-white">Priya Sharma</p>
-                                <p class="text-purple-300 text-lg">HR Manager, ABC Logistics</p>
+                            <div class="text-center sm:text-left">
+                                <p class="font-bold text-xl sm:text-2xl text-white">Priya Sharma</p>
+                                <p class="text-purple-300 text-base sm:text-lg">HR Manager, ABC Logistics</p>
                             </div>
                         </div>
-                        <p class="text-slate-300 italic text-lg leading-relaxed">"The quality of candidates from Shramic is unmatched. The verification is thorough, which saves us time and reduces risk. Our attrition in the warehouse department is down by over 40% since we started using the platform exclusively."</p>
+                        <p class="text-slate-300 italic responsive-text leading-relaxed text-center sm:text-left">"The quality of candidates from Shramic is unmatched. The verification is thorough, which saves us time and reduces risk. Our attrition in the warehouse department is down by over 40% since we started using the platform exclusively."</p>
                     </div>
                 </div>
             </div>
@@ -464,13 +593,13 @@
         <div class="section-divider"></div>
 
         <!-- Final CTA Section -->
-        <section id="cta" class="py-32 gradient-bg relative overflow-hidden">
+        <section id="cta" class="py-16 sm:py-24 md:py-32 gradient-bg relative overflow-hidden">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <h2 class="text-4xl md:text-6xl font-black text-white mb-8 fade-in hero-title">Ready to Build a Better Future of Work?</h2>
-                <p class="text-xl text-slate-300 mb-12 max-w-3xl mx-auto fade-in leading-relaxed" style="transition-delay: 0.2s;">Join the ecosystem of trust. Whether you're looking for a dependable job or a reliable team, start your journey with Shramic today.</p>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-6 fade-in" style="transition-delay: 0.4s;">
-                    <a href="#for-workers" class="w-full sm:w-auto bg-primary text-white px-12 py-6 rounded-full font-bold text-xl btn shadow-2xl relative z-10">Find Your Next Job</a>
-                    <a href="#for-employers" class="w-full sm:w-auto glass-effect text-white px-12 py-6 rounded-full font-bold text-xl btn shadow-2xl relative z-10">Hire Your Next Star</a>
+                <h2 class="responsive-title font-black text-white mb-6 sm:mb-8 fade-in hero-title">Ready to Build a Better Future of Work?</h2>
+                <p class="responsive-subtitle text-slate-300 mb-8 sm:mb-12 max-w-3xl mx-auto fade-in leading-relaxed" style="transition-delay: 0.2s;">Join the ecosystem of trust. Whether you're looking for a dependable job or a reliable team, start your journey with Shramic today.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 fade-in" style="transition-delay: 0.4s;">
+                    <a href="#for-workers" class="w-full sm:w-auto bg-primary text-white px-8 sm:px-12 py-4 sm:py-6 rounded-full font-bold text-lg sm:text-xl btn shadow-2xl relative z-10">Find Your Next Job</a>
+                    <a href="#for-employers" class="w-full sm:w-auto glass-effect text-white px-8 sm:px-12 py-4 sm:py-6 rounded-full font-bold text-lg sm:text-xl btn shadow-2xl relative z-10">Hire Your Next Star</a>
                 </div>
             </div>
         </section>
@@ -478,38 +607,38 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-indigo-500/30">
-        <div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="container mx-auto py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
                 <div class="col-span-2 md:col-span-1">
-                    <h3 class="text-3xl font-black text-white hero-title mb-4">Shramic</h3>
-                    <p class="text-slate-400 text-lg">Building India's Most Trusted Workforce.</p>
+                    <h3 class="text-2xl sm:text-3xl font-black text-white hero-title mb-3 sm:mb-4">Shramic</h3>
+                    <p class="text-slate-400 text-base sm:text-lg">Building India's Most Trusted Workforce.</p>
                 </div>
                 <div>
-                    <h4 class="font-bold text-indigo-300 tracking-wider uppercase mb-6">Platform</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#for-workers" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">For Workers</a></li>
-                        <li><a href="#for-employers" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">For Employers</a></li>
-                        <li><a href="#why-shramic" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">Why Shramic?</a></li>
+                    <h4 class="font-bold text-indigo-300 tracking-wider uppercase mb-4 sm:mb-6 text-sm sm:text-base">Platform</h4>
+                    <ul class="space-y-2 sm:space-y-3">
+                        <li><a href="#for-workers" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">For Workers</a></li>
+                        <li><a href="#for-employers" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">For Employers</a></li>
+                        <li><a href="#why-shramic" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">Why Shramic?</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold text-indigo-300 tracking-wider uppercase mb-6">Company</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">About Us</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">Careers</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">Contact</a></li>
+                    <h4 class="font-bold text-indigo-300 tracking-wider uppercase mb-4 sm:mb-6 text-sm sm:text-base">Company</h4>
+                    <ul class="space-y-2 sm:space-y-3">
+                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">About Us</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">Careers</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">Contact</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold text-indigo-300 tracking-wider uppercase mb-6">Legal</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">Privacy Policy</a></li>
-                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-lg">Terms of Service</a></li>
+                    <h4 class="font-bold text-indigo-300 tracking-wider uppercase mb-4 sm:mb-6 text-sm sm:text-base">Legal</h4>
+                    <ul class="space-y-2 sm:space-y-3">
+                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">Privacy Policy</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors duration-300 text-sm sm:text-lg">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="mt-12 pt-8 border-t border-slate-700 text-center text-slate-400">
-                <p class="text-lg">&copy; 2024 Shramic Networks. All rights reserved.</p>
+            <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-700 text-center text-slate-400">
+                <p class="text-sm sm:text-lg">&copy; 2024 Shramic Networks. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -519,35 +648,68 @@
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
 
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when a link is clicked
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const isExpanded = !mobileMenu.classList.contains('hidden');
+                mobileMenuButton.setAttribute('aria-expanded', isExpanded.toString());
             });
-        });
 
-        // Scroll-triggered fade-in animations
+            // Close mobile menu when a link is clicked
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Close mobile menu on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // Scroll-triggered fade-in animations with enhanced performance
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    // Unobserve after animation to improve performance
+                    observer.unobserve(entry.target);
                 }
             });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+        }, observerOptions);
+
+        // Wait for DOM to be fully loaded before observing elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const fadeElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
+            fadeElements.forEach(el => observer.observe(el));
         });
 
-        const fadeElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
-        fadeElements.forEach(el => observer.observe(el));
+        // Floating particles animation with performance optimization
+        let particleCount = 0;
+        const maxParticles = 20;
 
-        // Floating particles animation
         function createParticle() {
+            if (particleCount >= maxParticles) return;
+            
             const particle = document.createElement('div');
             particle.className = 'particle';
             
@@ -558,85 +720,222 @@
             particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
             particle.style.animationDelay = Math.random() * 2 + 's';
             
-            document.getElementById('particles-container').appendChild(particle);
-            
-            setTimeout(() => {
-                particle.remove();
-            }, 8000);
+            const container = document.getElementById('particles-container');
+            if (container) {
+                container.appendChild(particle);
+                particleCount++;
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.remove();
+                        particleCount--;
+                    }
+                }, 8000);
+            }
         }
 
-        // Create particles periodically
-        setInterval(createParticle, 300);
+        // Create particles with reduced frequency on mobile
+        const isMobile = window.innerWidth <= 768;
+        const particleInterval = isMobile ? 800 : 300;
+        
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            setInterval(createParticle, particleInterval);
+        }
 
-        // Smooth scrolling for anchor links
+        // Smooth scrolling for anchor links with offset for fixed header
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
                     });
                 }
             });
         });
 
-        // Add parallax effect to hero section
-        window.addEventListener('scroll', () => {
+        // Optimized parallax effect with requestAnimationFrame
+        let ticking = false;
+        
+        function updateParallax() {
             const scrolled = window.pageYOffset;
             const parallax = document.querySelector('.gradient-bg');
             if (parallax) {
-                const speed = scrolled * 0.5;
+                const speed = scrolled * 0.3; // Reduced intensity for better performance
                 parallax.style.transform = `translateY(${speed}px)`;
             }
+            ticking = false;
+        }
+
+        function requestParallaxUpdate() {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+
+        // Only apply parallax on desktop to avoid performance issues on mobile
+        if (!isMobile && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            window.addEventListener('scroll', requestParallaxUpdate, { passive: true });
+        }
+
+        // Enhanced video controls with better mobile support
+        function initializeVideoControls() {
+            const videos = document.querySelectorAll('video');
+            const playButtonOverlays = document.querySelectorAll('.absolute.inset-0.flex');
+            
+            videos.forEach((video, index) => {
+                const playButton = playButtonOverlays[index];
+                
+                if (video && playButton) {
+                    // Handle play button clicks
+                    playButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleVideo(video, playButton);
+                    });
+
+                    // Handle video clicks
+                    video.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleVideo(video, playButton);
+                    });
+
+                    // Update overlay visibility based on video state
+                    video.addEventListener('play', () => {
+                        playButton.style.opacity = '0';
+                        playButton.style.pointerEvents = 'none';
+                    });
+
+                    video.addEventListener('pause', () => {
+                        playButton.style.opacity = '1';
+                        playButton.style.pointerEvents = 'auto';
+                    });
+
+                    video.addEventListener('ended', () => {
+                        playButton.style.opacity = '1';
+                        playButton.style.pointerEvents = 'auto';
+                    });
+
+                    // Handle video loading errors
+                    video.addEventListener('error', () => {
+                        console.warn('Video failed to load:', video.src);
+                    });
+
+                    // Ensure videos are properly initialized on mobile
+                    video.addEventListener('loadedmetadata', () => {
+                        if (video.readyState >= 2) {
+                            playButton.style.opacity = video.paused ? '1' : '0';
+                        }
+                    });
+                }
+            });
+        }
+
+        function toggleVideo(video, playButton) {
+            try {
+                if (video.paused) {
+                    const playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.warn('Video play failed:', error);
+                        });
+                    }
+                } else {
+                    video.pause();
+                }
+            } catch (error) {
+                console.warn('Video control error:', error);
+            }
+        }
+
+        // Initialize video controls when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializeVideoControls);
+
+        // Loading animation with better performance
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
         });
 
-        // Video play button functionality for both videos
-        const videos = document.querySelectorAll('video');
-        const playButtons = document.querySelectorAll('.absolute.inset-0.flex');
-        
-        videos.forEach((video, index) => {
-            const playButton = playButtons[index];
-            
-            if (video && playButton) {
-                playButton.addEventListener('click', () => {
-                    if (video.paused) {
-                        video.play();
-                        playButton.style.opacity = '0';
-                    } else {
-                        video.pause();
-                        playButton.style.opacity = '1';
+        // Handle orientation changes on mobile
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                // Recalculate any fixed positioning if needed
+                const videos = document.querySelectorAll('video');
+                videos.forEach(video => {
+                    if (!video.paused) {
+                        // Ensure video continues playing after orientation change
+                        video.play().catch(() => {});
                     }
                 });
+            }, 500);
+        });
 
-                video.addEventListener('click', () => {
-                    if (video.paused) {
-                        video.play();
-                        playButton.style.opacity = '0';
-                    } else {
-                        video.pause();
-                        playButton.style.opacity = '1';
-                    }
-                });
+        // Handle resize events for responsive adjustments
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                // Update mobile detection
+                const nowMobile = window.innerWidth <= 768;
+                if (nowMobile !== isMobile) {
+                    location.reload(); // Reload to apply mobile-specific optimizations
+                }
+            }, 250);
+        });
 
-                video.addEventListener('play', () => {
-                    playButton.style.opacity = '0';
-                });
-
-                video.addEventListener('pause', () => {
-                    playButton.style.opacity = '1';
-                });
+        // Keyboard navigation improvements
+        document.addEventListener('keydown', (e) => {
+            // Add keyboard support for custom buttons
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (e.target.classList.contains('btn')) {
+                    e.preventDefault();
+                    e.target.click();
+                }
             }
         });
 
-        // Add loading animation
-        window.addEventListener('load', () => {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease-in-out';
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
+        // Preload critical images for better performance
+        function preloadImages() {
+            const criticalImages = [
+                'https://placehold.co/100x100/3B82F6/FFFFFF?text=W',
+                'https://placehold.co/100x100/1E293B/FFFFFF?text=E'
+            ];
+            
+            criticalImages.forEach(src => {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = src;
+                document.head.appendChild(link);
+            });
+        }
+
+        // Initialize performance optimizations
+        document.addEventListener('DOMContentLoaded', () => {
+            preloadImages();
+            
+            // Add intersection observer for lazy loading if needed
+            if ('IntersectionObserver' in window) {
+                const lazyImages = document.querySelectorAll('img[data-src]');
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+                
+                lazyImages.forEach(img => imageObserver.observe(img));
+            }
         });
     </script>
 </body>
