@@ -252,7 +252,29 @@
                  <div class="mt-20 fade-in floating" style="transition-delay: 0.6s;">
                     <div class="relative">
                         <div class="absolute inset-0 bg-indigo-500 rounded-3xl blur-3xl opacity-30 pulse-ring"></div>
-                        <img src="https://placehold.co/1400x700/1e293b/4f46e5?text=Empowering+Connections" alt="Illustration of a worker and employer shaking hands" class="rounded-3xl shadow-2xl mx-auto relative z-10 border border-indigo-500/30">
+                        <video 
+                            class="rounded-3xl shadow-2xl mx-auto relative z-10 border border-indigo-500/30 w-full max-w-6xl"
+                            autoplay 
+                            muted 
+                            loop 
+                            playsinline
+                            controls
+                            poster="https://placehold.co/1400x700/1e293b/4f46e5?text=Loading+Video"
+                        >
+                            <!-- Replace these URLs with your actual video URLs -->
+                            <source src="Emp.mp4" type="video/mp4">
+                            <source src="YOUR_VIDEO_URL.webm" type="video/webm">
+                            <!-- Fallback for browsers that don't support video -->
+                            <img src="https://placehold.co/1400x700/1e293b/4f46e5?text=Empowering+Connections" alt="Illustration of a worker and employer shaking hands" class="rounded-3xl shadow-2xl mx-auto">
+                        </video>
+                        <!-- Play button overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center z-20 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <button class="bg-white/20 backdrop-blur-sm rounded-full p-6 hover:bg-white/30 transition-all duration-300 group">
+                                <svg class="w-12 h-12 text-white group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -359,7 +381,29 @@
                     <div class="lg:w-1/2 slide-in-left">
                         <div class="relative">
                             <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl blur-2xl opacity-20"></div>
-                            <img src="https://placehold.co/800x600/1e293b/4f46e5?text=Quality+and+Trust" alt="A team of confident blue-collar workers" class="rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30">
+                            <video 
+                                class="rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30 w-full"
+                                autoplay 
+                                muted 
+                                loop 
+                                playsinline
+                                controls
+                                poster="https://placehold.co/800x600/1e293b/4f46e5?text=Loading+Video"
+                            >
+                                <!-- Replace these URLs with your actual video URLs -->
+                                <source src="qt.mp4" type="video/mp4">
+                                <source src="YOUR_SECOND_VIDEO_URL.webm" type="video/webm">
+                                <!-- Fallback for browsers that don't support video -->
+                                <img src="https://placehold.co/800x600/1e293b/4f46e5?text=Quality+and+Trust" alt="A team of confident blue-collar workers" class="rounded-3xl shadow-2xl relative z-10 border border-indigo-500/30">
+                            </video>
+                            <!-- Play button overlay for second video -->
+                            <div class="absolute inset-0 flex items-center justify-center z-20 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                <button class="bg-white/20 backdrop-blur-sm rounded-full p-4 hover:bg-white/30 transition-all duration-300 group">
+                                    <svg class="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="lg:w-1/2 slide-in-right" style="transition-delay: 0.2s;">
@@ -545,6 +589,44 @@
             if (parallax) {
                 const speed = scrolled * 0.5;
                 parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+
+        // Video play button functionality for both videos
+        const videos = document.querySelectorAll('video');
+        const playButtons = document.querySelectorAll('.absolute.inset-0.flex');
+        
+        videos.forEach((video, index) => {
+            const playButton = playButtons[index];
+            
+            if (video && playButton) {
+                playButton.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.play();
+                        playButton.style.opacity = '0';
+                    } else {
+                        video.pause();
+                        playButton.style.opacity = '1';
+                    }
+                });
+
+                video.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.play();
+                        playButton.style.opacity = '0';
+                    } else {
+                        video.pause();
+                        playButton.style.opacity = '1';
+                    }
+                });
+
+                video.addEventListener('play', () => {
+                    playButton.style.opacity = '0';
+                });
+
+                video.addEventListener('pause', () => {
+                    playButton.style.opacity = '1';
+                });
             }
         });
 
