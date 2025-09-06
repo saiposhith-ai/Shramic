@@ -4,6 +4,90 @@
   <meta charset="UTF-8">
   <title>Shramic Post</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Add these meta tags for better social sharing -->
+  <meta property="og:title" content="Shramic - View Post">
+  <meta property="og:description" content="Open this post in the Shramic app">
+  <meta property="og:type" content="website">
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      margin: 0;
+    }
+    
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(79, 70, 229, 0.3);
+    }
+    
+    .logo {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    
+    #message {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #e2e8f0;
+    }
+    
+    #fallback {
+      display: none;
+    }
+    
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0.5rem;
+      transition: transform 0.2s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: rgba(79, 70, 229, 0.2);
+      border: 1px solid rgba(79, 70, 229, 0.3);
+    }
+    
+    .spinner {
+      border: 2px solid rgba(79, 70, 229, 0.3);
+      border-radius: 50%;
+      border-top: 2px solid #4f46e5;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -12,44 +96,84 @@
       // Check if the path matches /post/{id}
       if (path.startsWith("/post/")) {
         const postId = path.replace("/post/", "");
+        
+        // Update message
+        document.getElementById("message").innerHTML = 
+          `<div class="spinner"></div>Opening post in Shramic app...`;
 
-        // 1. Try to open the app directly (App Link will handle this if installed)
-        // If the app is not installed, user stays on this page
-        document.getElementById("message").innerText =
-          `Opening Shramic app for post: ${postId}...`;
-
-        // Optional: after a delay, show fallback link to download app
+        // Try to open the app immediately
+        tryOpenApp(postId);
+        
+        // Show fallback after delay
         setTimeout(() => {
           document.getElementById("fallback").style.display = "block";
-        }, 2000);
+          document.getElementById("message").innerHTML = 
+            "Unable to open the app automatically";
+        }, 3000);
+        
       } else {
         // Not a post route, show normal 404
         document.getElementById("message").innerText = "Page not found.";
+        document.getElementById("fallback").innerHTML = 
+          '<a href="/" class="btn">Go to Homepage</a>';
+        document.getElementById("fallback").style.display = "block";
       }
     });
-  </script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 2rem;
+    function tryOpenApp(postId) {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const isAndroid = /Android/.test(navigator.userAgent);
+      
+      // Replace these with your actual app schemes
+      const iosScheme = `shramic://post/${postId}`;
+      const androidScheme = `shramic://post/${postId}`;
+      const androidIntent = `intent://post/${postId}#Intent;scheme=shramic;package=com.example.shramic;S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.example.shramic;end`;
+      
+      if (isIOS) {
+        // Try iOS app scheme
+        window.location.href = iosScheme;
+        
+        // Fallback to App Store if app not installed
+        setTimeout(() => {
+          window.location.href = "https://apps.apple.com/app/shramic/idYOUR_APP_ID";
+        }, 2000);
+        
+      } else if (isAndroid) {
+        // Try Android intent first (more reliable)
+        window.location.href = androidIntent;
+        
+      } else {
+        // Desktop - show QR code or direct to stores
+        showDesktopFallback(postId);
+      }
     }
-    #fallback {
-      display: none;
-      margin-top: 1rem;
+    
+    function showDesktopFallback(postId) {
+      document.getElementById("message").innerHTML = 
+        "This link is meant to be opened on a mobile device";
+      document.getElementById("fallback").innerHTML = `
+        <p>Scan this QR code with your phone or download the app:</p>
+        <div style="margin: 1rem 0;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(window.location.href)}" alt="QR Code" style="border-radius: 10px;">
+        </div>
+        <a href="https://play.google.com/store/apps/details?id=com.example.shramic" class="btn">Download for Android</a>
+        <a href="https://apps.apple.com/app/shramic/idYOUR_APP_ID" class="btn">Download for iOS</a>
+      `;
+      document.getElementById("fallback").style.display = "block";
     }
-    a {
-      color: #0066cc;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  </style>
+  </script>
 </head>
 <body>
-  <h1 id="message">Redirecting...</h1>
-  <div id="fallback">
-    <p>Don’t have the app? <a href="https://play.google.com/store/apps/details?id=com.example.wc">Download Shramic</a></p>
+  <div class="container">
+    <div class="logo">Shramic</div>
+    <h1 id="message">Redirecting...</h1>
+    <div id="fallback">
+      <p>Don't have the app?</p>
+      <a href="https://play.google.com/store/apps/details?id=com.example.shramic" class="btn">Download for Android</a>
+      <a href="https://apps.apple.com/app/shramic/idYOUR_APP_ID" class="btn btn-secondary">Download for iOS</a>
+      <br><br>
+      <a href="#" onclick="tryOpenApp(window.location.pathname.replace('/post/', ''))" class="btn btn-secondary">Try Again</a>
+    </div>
   </div>
 </body>
 </html>
