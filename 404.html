@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shramic Post</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const path = window.location.pathname;
+
+      // Check if the path matches /post/{id}
+      if (path.startsWith("/post/")) {
+        const postId = path.replace("/post/", "");
+
+        // 1. Try to open the app directly (App Link will handle this if installed)
+        // If the app is not installed, user stays on this page
+        document.getElementById("message").innerText =
+          `Opening Shramic app for post: ${postId}...`;
+
+        // Optional: after a delay, show fallback link to download app
+        setTimeout(() => {
+          document.getElementById("fallback").style.display = "block";
+        }, 2000);
+      } else {
+        // Not a post route, show normal 404
+        document.getElementById("message").innerText = "Page not found.";
+      }
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    #fallback {
+      display: none;
+      margin-top: 1rem;
+    }
+    a {
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="message">Redirecting...</h1>
+  <div id="fallback">
+    <p>Don’t have the app? <a href="https://play.google.com/store/apps/details?id=com.example.wc">Download Shramic</a></p>
+  </div>
+</body>
+</html>
