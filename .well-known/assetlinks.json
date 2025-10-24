@@ -8,5 +8,15 @@
         "C6:34:C0:89:C3:5D:8C:7A:0F:FC:86:AA:46:10:88:36:3D:8B:09:11:7D:3E:1B:3D:C5:22:AF:89:8E:0B:67:E3"
       ]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.sharmic_provider",
+      "sha256_cert_fingerprints": [
+        "C6:34:C0:89:C3:5D:8C:7A:0F:FC:86:AA:46:10:88:36:3D:8B:09:11:7D:3E:1B:3D:C5:22:AF:89:8E:0B:67:E3"
+      ]
+    }
   }
 ]
