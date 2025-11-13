@@ -5,14 +5,12 @@ const HomePage: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState('')
-  const particlesContainerRef = useRef<HTMLDivElement | null>(null)
 
   // Scroll effect for header
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
       
-      // Active section detection
       const sections = ['for-workers', 'for-employers', 'why-shramic', 'testimonials']
       for (const section of sections) {
         const el = document.getElementById(section)
@@ -29,58 +27,11 @@ const HomePage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Premium particle system
-  useEffect(() => {
-    const container = particlesContainerRef.current
-    if (!container) return
-
-    let particleCount = 0
-    const maxParticles = 40
-    const isMobile = window.innerWidth <= 768
-    const intervalMs = isMobile ? 500 : 150
-
-    function createParticle() {
-      if (particleCount >= maxParticles || !container) return
-      const particle = document.createElement('div')
-      particle.className = 'particle-orb'
-      
-      const colors = [
-        'linear-gradient(135deg, rgba(251, 191, 36, 0.8) 0%, rgba(245, 158, 11, 0.4) 100%)',
-        'linear-gradient(135deg, rgba(139, 92, 246, 0.8) 0%, rgba(124, 58, 237, 0.4) 100%)',
-        'linear-gradient(135deg, rgba(236, 72, 153, 0.8) 0%, rgba(219, 39, 119, 0.4) 100%)',
-        'linear-gradient(135deg, rgba(59, 130, 246, 0.8) 0%, rgba(37, 99, 235, 0.4) 100%)'
-      ]
-      
-      particle.style.background = colors[Math.floor(Math.random() * colors.length)]
-      const size = Math.random() * 12 + 6
-      particle.style.width = `${size}px`
-      particle.style.height = `${size}px`
-      particle.style.left = `${Math.random() * 100}vw`
-      particle.style.animationDuration = `${Math.random() * 6 + 8}s`
-      particle.style.animationDelay = `${Math.random() * 3}s`
-      container.appendChild(particle)
-      particleCount++
-      
-      setTimeout(() => {
-        if (particle.parentElement) particle.remove()
-        particleCount--
-      }, 15000)
-    }
-
-    const intervalId = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      ? window.setInterval(createParticle, intervalMs)
-      : null
-
-    return () => {
-      if (intervalId) window.clearInterval(intervalId)
-    }
-  }, [])
-
-  // IntersectionObserver for staggered animations
+  // IntersectionObserver for animations
   useEffect(() => {
     const observerOptions: IntersectionObserverInit = { 
       threshold: 0.1, 
-      rootMargin: '0px 0px -100px 0px' 
+      rootMargin: '0px 0px -50px 0px' 
     }
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -123,7 +74,7 @@ const HomePage: React.FC = () => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap');
         
         * {
           box-sizing: border-box;
@@ -140,113 +91,130 @@ const HomePage: React.FC = () => {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           background: #ffffff;
+          color: #1e293b;
           overflow-x: hidden;
         }
 
-        /* Premium Gradient Text */
-        .gradient-text {
-          background: linear-gradient(135deg, #f59e0b 0%, #ec4899 35%, #8b5cf6 70%, #3b82f6 100%);
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: gradient-shift 8s ease infinite;
+        /* Brand Colors */
+        .text-brand-primary { color: #1e40af; }
+        .text-brand-secondary { color: #0369a1; }
+        .text-brand-accent { color: #f59e0b; }
+        .bg-brand-primary { background: #1e40af; }
+        .bg-brand-light { background: #eff6ff; }
+        .border-brand { border-color: #3b82f6; }
+
+        /* Typography */
+        .font-display {
+          font-family: 'Poppins', sans-serif;
         }
 
-        @keyframes gradient-shift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+        /* Trust Badge */
+        .trust-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #f0fdf4;
+          border: 1px solid #86efac;
+          padding: 8px 16px;
+          border-radius: 50px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #15803d;
         }
 
-        /* Glassmorphism */
-        .glass-premium {
-          background: rgba(255, 255, 255, 0.88);
-          backdrop-filter: blur(32px) saturate(180%);
-          border: 1.5px solid rgba(255, 255, 255, 0.9);
-          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(139, 92, 246, 0.08);
-        }
-
+        /* Glass Effect */
         .glass-card {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 100%);
-          backdrop-filter: blur(24px) saturate(200%);
-          border: 2px solid rgba(255, 255, 255, 0.95);
-          box-shadow: 0 24px 72px rgba(0, 0, 0, 0.06), 0 8px 32px rgba(139, 92, 246, 0.12);
-          position: relative;
-          overflow: hidden;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          border: 1px solid #e2e8f0;
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+          transition: all 0.3s ease;
         }
 
-        .glass-card::before {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          border-radius: inherit;
-          padding: 2px;
-          background: linear-gradient(135deg, #fbbf24, #ec4899, #8b5cf6, #3b82f6);
-          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-          -webkit-mask-composite: xor;
-          mask-composite: exclude;
-          opacity: 0;
-          transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .glass-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 12px 36px rgba(30, 64, 175, 0.15);
+          border-color: #3b82f6;
         }
 
-        .glass-card:hover::before {
-          opacity: 1;
+        /* Buttons */
+        .btn-primary {
+          background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+          color: white;
+          font-weight: 700;
+          padding: 14px 32px;
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          border: none;
+          cursor: pointer;
+          box-shadow: 0 4px 16px rgba(30, 64, 175, 0.3);
         }
 
-        /* Premium Button */
-        .btn-premium {
-          position: relative;
-          background: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%);
-          background-size: 200% 200%;
-          box-shadow: 0 12px 48px rgba(236, 72, 153, 0.35), 0 4px 16px rgba(245, 158, 11, 0.25);
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow: hidden;
-        }
-
-        .btn-premium::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
-          transform: translateX(-100%) skewX(-15deg);
-          transition: transform 0.8s ease;
-        }
-
-        .btn-premium:hover {
-          transform: translateY(-6px) scale(1.03);
-          box-shadow: 0 24px 72px rgba(236, 72, 153, 0.45), 0 8px 24px rgba(245, 158, 11, 0.35);
-          background-position: 100% 50%;
-        }
-
-        .btn-premium:hover::before {
-          transform: translateX(100%) skewX(-15deg);
-        }
-
-        .btn-premium:active {
-          transform: translateY(-3px) scale(1.01);
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(30, 64, 175, 0.4);
         }
 
         .btn-secondary {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
-          border: 2px solid rgba(139, 92, 246, 0.2);
-          box-shadow: 0 12px 48px rgba(139, 92, 246, 0.15);
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          background: white;
+          color: #1e40af;
+          font-weight: 700;
+          padding: 14px 32px;
+          border-radius: 12px;
+          border: 2px solid #1e40af;
+          transition: all 0.3s ease;
+          cursor: pointer;
         }
 
         .btn-secondary:hover {
-          transform: translateY(-6px) scale(1.03);
-          box-shadow: 0 24px 72px rgba(139, 92, 246, 0.25);
-          border-color: rgba(139, 92, 246, 0.4);
-          background: rgba(255, 255, 255, 1);
+          background: #eff6ff;
+          transform: translateY(-2px);
+        }
+
+        /* Header */
+        .header-main {
+          background: white;
+          border-bottom: 1px solid #e2e8f0;
+          transition: all 0.3s ease;
+        }
+
+        .header-scrolled {
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-link {
+          position: relative;
+          color: #475569;
+          font-weight: 600;
+          transition: color 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+          color: #1e40af;
+        }
+
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 3px;
+          background: #1e40af;
+          transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+          width: 100%;
         }
 
         /* Reveal Animations */
         .reveal {
           opacity: 0;
-          transform: translateY(60px);
-          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+          transform: translateY(40px);
+          transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         .reveal.animate-in {
@@ -254,337 +222,208 @@ const HomePage: React.FC = () => {
           transform: translateY(0);
         }
 
-        .reveal-left {
-          opacity: 0;
-          transform: translateX(-80px);
-          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal-left.animate-in {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        .reveal-right {
-          opacity: 0;
-          transform: translateX(80px);
-          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal-right.animate-in {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        .reveal-scale {
-          opacity: 0;
-          transform: scale(0.92);
-          transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
-                      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal-scale.animate-in {
-          opacity: 1;
-          transform: scale(1);
-        }
-
-        /* Stagger delay for cards */
         .reveal:nth-child(1) { transition-delay: 0s; }
         .reveal:nth-child(2) { transition-delay: 0.1s; }
         .reveal:nth-child(3) { transition-delay: 0.2s; }
         .reveal:nth-child(4) { transition-delay: 0.3s; }
 
-        /* Premium Animations */
-        @keyframes float-elegant {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          33% { transform: translateY(-30px) rotate(2deg); }
-          66% { transform: translateY(-18px) rotate(-2deg); }
+        /* Icon Backgrounds */
+        .icon-bg-blue {
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         }
 
-        .float-elegant {
-          animation: float-elegant 10s ease-in-out infinite;
+        .icon-bg-cyan {
+          background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
         }
 
-        @keyframes pulse-premium {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.12); }
-        }
-
-        .pulse-premium {
-          animation: pulse-premium 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes particle-rise {
-          to { 
-            transform: translateY(-130vh) rotate(360deg); 
-            opacity: 0; 
-          }
-        }
-
-        .particle-orb {
-          position: absolute;
-          bottom: -20px;
-          border-radius: 50%;
-          pointer-events: none;
-          animation: particle-rise linear forwards;
-          filter: blur(3px);
-          box-shadow: 0 0 20px currentColor;
-        }
-
-        /* Premium Backgrounds */
-        .bg-hero {
-          background: 
-            radial-gradient(circle at 20% 20%, rgba(251, 191, 36, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
-            radial-gradient(circle at 40% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-            linear-gradient(180deg, #ffffff 0%, #fefdfb 100%);
-        }
-
-        .bg-section-light {
-          background: linear-gradient(180deg, #ffffff 0%, #fdfbf8 50%, #ffffff 100%);
-        }
-
-        .bg-section-accent {
-          background: 
-            radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-            radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.06) 0%, transparent 50%),
-            linear-gradient(180deg, #ffffff 0%, #faf8ff 50%, #ffffff 100%);
-        }
-
-        /* Icon Gradient Backgrounds */
-        .icon-gradient-amber {
+        .icon-bg-amber {
           background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-          box-shadow: 0 12px 32px rgba(251, 191, 36, 0.3);
         }
 
-        .icon-gradient-purple {
-          background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-          box-shadow: 0 12px 32px rgba(139, 92, 246, 0.3);
+        .icon-bg-green {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
 
-        .icon-gradient-pink {
-          background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
-          box-shadow: 0 12px 32px rgba(236, 72, 153, 0.3);
+        /* Stats Section */
+        .stat-card {
+          background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+          border: 1px solid #93c5fd;
+          padding: 24px;
+          border-radius: 16px;
+          text-align: center;
         }
 
-        .icon-gradient-blue {
-          background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-          box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3);
+        .stat-number {
+          font-size: 3rem;
+          font-weight: 900;
+          color: #1e40af;
+          font-family: 'Poppins', sans-serif;
         }
 
-        /* Hover Effects */
-        .hover-float {
-          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .hover-float:hover {
-          transform: translateY(-12px) scale(1.02);
-        }
-
-        .icon-hover {
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .icon-hover:hover {
-          transform: scale(1.15) rotate(5deg);
-        }
-
-        /* Premium Typography */
-        .font-display {
-          font-family: 'Syne', sans-serif;
-        }
-
-        .font-serif {
-          font-family: 'Playfair Display', serif;
-        }
-
-        /* Section Dividers */
-        .divider-elegant {
-          height: 120px;
-          background: linear-gradient(to bottom, 
-            transparent 0%, 
-            rgba(139, 92, 246, 0.03) 20%,
-            rgba(236, 72, 153, 0.03) 50%,
-            rgba(139, 92, 246, 0.03) 80%,
-            transparent 100%);
-        }
-
-        /* Header Effects */
-        .header-premium {
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .header-scrolled {
-          background: rgba(255, 255, 255, 0.96);
-          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(139, 92, 246, 0.08);
-        }
-
-        /* Active Nav Link */
-        .nav-link {
-          position: relative;
-          transition: all 0.3s ease;
-        }
-
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -4px;
-          left: 50%;
-          transform: translateX(-50%) scaleX(0);
-          width: 80%;
-          height: 3px;
-          background: linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6);
-          border-radius: 2px;
-          transition: transform 0.3s ease;
-        }
-
-        .nav-link:hover::after,
-        .nav-link.active::after {
-          transform: translateX(-50%) scaleX(1);
+        .stat-label {
+          font-size: 1rem;
+          color: #475569;
+          font-weight: 600;
+          margin-top: 8px;
         }
 
         /* Video Container */
-        .video-wrapper {
+        .video-container {
           position: relative;
-          border-radius: 2rem;
+          border-radius: 16px;
           overflow: hidden;
+          border: 2px solid #e2e8f0;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
         }
 
-        .video-wrapper::before {
-          content: '';
-          position: absolute;
-          inset: -3px;
-          background: linear-gradient(135deg, #fbbf24, #ec4899, #8b5cf6, #3b82f6);
-          border-radius: inherit;
-          opacity: 0.6;
-          z-index: -1;
-        }
-
-        .video-wrapper:hover::before {
-          opacity: 1;
-        }
-
-        /* Testimonial Cards */
+        /* Testimonial Card */
         .testimonial-card {
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
-          backdrop-filter: blur(24px);
-          border: 2px solid rgba(255, 255, 255, 0.9);
-          box-shadow: 0 24px 72px rgba(0, 0, 0, 0.08);
-          transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          background: white;
+          border: 1px solid #e2e8f0;
+          border-radius: 16px;
+          padding: 32px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+          transition: all 0.3s ease;
         }
 
         .testimonial-card:hover {
-          transform: translateY(-16px) scale(1.02);
-          box-shadow: 0 36px 96px rgba(139, 92, 246, 0.2);
+          transform: translateY(-8px);
+          box-shadow: 0 12px 36px rgba(30, 64, 175, 0.15);
         }
 
         /* Badge */
-        .badge-verified {
+        .verified-badge {
+          position: absolute;
+          bottom: -8px;
+          right: -8px;
+          width: 32px;
+          height: 32px;
           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-          box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+          border: 3px solid white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Section Backgrounds */
+        .bg-pattern {
+          background-image: 
+            radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-          .gradient-text {
-            font-size: 2.25rem;
-          }
-          
-          .particle-orb {
-            filter: blur(2px);
-          }
+          .stat-number { font-size: 2rem; }
         }
 
-        /* Smooth Transitions */
-        * {
-          transition-property: background-color, border-color, color, fill, stroke;
-          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          transition-duration: 150ms;
+        /* Feature Icon Hover */
+        .feature-icon {
+          transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover .feature-icon {
+          transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Company Info Badge */
+        .company-badge {
+          display: inline-block;
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          padding: 6px 14px;
+          border-radius: 50px;
+          font-size: 13px;
+          font-weight: 600;
+          color: #64748b;
         }
       `}</style>
 
-      {/* Particles */}
-      <div ref={particlesContainerRef} className="fixed inset-0 pointer-events-none z-0" />
-
       {/* Header */}
-      <header className={`glass-premium header-premium fixed top-0 left-0 right-0 z-50 ${scrolled ? 'header-scrolled' : ''}`}>
+      <header className={`header-main fixed top-0 left-0 right-0 z-50 ${scrolled ? 'header-scrolled' : ''}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <div className="flex-shrink-0">
-              <a href="#" className="text-3xl sm:text-4xl font-black gradient-text tracking-tight font-display">
-                Shramic
-              </a>
-            </div>
-
-            <nav className="hidden md:block">
-              <div className="flex items-center space-x-8">
-                <a 
-                  href="#for-workers" 
-                  className={`nav-link text-gray-700 hover:text-amber-600 px-4 py-2 text-sm font-bold ${activeSection === 'for-workers' ? 'active' : ''}`}
-                >
-                  For Workers
-                </a>
-                <a 
-                  href="#for-employers" 
-                  className={`nav-link text-gray-700 hover:text-purple-600 px-4 py-2 text-sm font-bold ${activeSection === 'for-employers' ? 'active' : ''}`}
-                >
-                  For Employers
-                </a>
-                <a 
-                  href="#why-shramic" 
-                  className={`nav-link text-gray-700 hover:text-pink-600 px-4 py-2 text-sm font-bold ${activeSection === 'why-shramic' ? 'active' : ''}`}
-                >
-                  Why Shramic?
-                </a>
-                <a 
-                  href="#testimonials" 
-                  className={`nav-link text-gray-700 hover:text-blue-600 px-4 py-2 text-sm font-bold ${activeSection === 'testimonials' ? 'active' : ''}`}
-                >
-                  Testimonials
-                </a>
+            {/* Logo - replace /logo.png with your actual logo path */}
+            <a href="#" className="flex items-center gap-3 flex-shrink-0">
+              <img 
+                src="/logo.png" 
+                alt="Shramic Networks" 
+                className="h-12 w-auto object-contain"
+                onError={(e) => {
+                  // Fallback if image doesn't load
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              {/* Fallback text logo */}
+              <div className="hidden">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-xl font-black text-brand-primary font-display tracking-tight whitespace-nowrap">
+                      Shramic Networks
+                    </div>
+                    <div className="company-badge text-xs -mt-1">Est. 2025</div>
+                  </div>
+                </div>
               </div>
+            </a>
+
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              <a href="#for-workers" className={`nav-link text-sm whitespace-nowrap ${activeSection === 'for-workers' ? 'active' : ''}`}>
+                For Workers
+              </a>
+              <a href="#for-employers" className={`nav-link text-sm whitespace-nowrap ${activeSection === 'for-employers' ? 'active' : ''}`}>
+                For Employers
+              </a>
+              <a href="#why-shramic" className={`nav-link text-sm whitespace-nowrap ${activeSection === 'why-shramic' ? 'active' : ''}`}>
+                Why Us
+              </a>
+              <a href="#testimonials" className={`nav-link text-sm whitespace-nowrap ${activeSection === 'testimonials' ? 'active' : ''}`}>
+                Reviews
+              </a>
             </nav>
 
-            <div className="hidden md:block">
-              <a href="#cta" className="btn-premium text-white px-8 py-3 rounded-full text-sm font-bold">
+            <div className="hidden lg:block flex-shrink-0">
+              <a href="#cta" className="btn-primary whitespace-nowrap">
                 Get Started
               </a>
             </div>
 
-            <div className="flex md:hidden">
-              <button
-                onClick={() => setMobileOpen(!mobileOpen)}
-                aria-expanded={mobileOpen}
-                aria-label="Toggle menu"
-                className="glass-premium p-2 rounded-xl text-gray-700 hover:text-purple-600"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                </svg>
-              </button>
-            </div>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex lg:hidden p-2 rounded-lg hover:bg-gray-100 flex-shrink-0"
+              aria-label="Toggle menu"
+            >
+              <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="md:hidden glass-premium">
+          <div className="lg:hidden bg-white border-t border-gray-200">
             <div className="px-4 pt-2 pb-4 space-y-2">
-              <a href="#for-workers" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-gray-700 hover:text-amber-600 hover:bg-amber-50 font-bold">
+              <a href="#for-workers" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-brand-primary font-semibold">
                 For Workers
               </a>
-              <a href="#for-employers" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-gray-700 hover:text-purple-600 hover:bg-purple-50 font-bold">
+              <a href="#for-employers" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-brand-primary font-semibold">
                 For Employers
               </a>
-              <a href="#why-shramic" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-gray-700 hover:text-pink-600 hover:bg-pink-50 font-bold">
-                Why Shramic?
+              <a href="#why-shramic" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-brand-primary font-semibold">
+                Why Us
               </a>
-              <a href="#testimonials" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-bold">
-                Testimonials
+              <a href="#testimonials" onClick={() => setMobileOpen(false)} className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-brand-primary font-semibold">
+                Reviews
               </a>
-              <a href="#cta" onClick={() => setMobileOpen(false)} className="btn-premium block text-center text-white px-4 py-3 rounded-full font-bold mt-2">
+              <a href="#cta" onClick={() => setMobileOpen(false)} className="btn-primary block text-center mt-2">
                 Get Started
               </a>
             </div>
@@ -593,358 +432,393 @@ const HomePage: React.FC = () => {
       </header>
 
       {/* Main */}
-      <main className="relative z-10">
+      <main>
         {/* Hero Section */}
-        <section className="pt-32 pb-24 md:pt-40 md:pb-32 bg-hero relative overflow-hidden">
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-20 right-20 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl pulse-premium" />
-            <div className="absolute bottom-20 left-20 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl pulse-premium" style={{ animationDelay: '2s' }} />
-            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-amber-400 rounded-full mix-blend-multiply filter blur-3xl pulse-premium" style={{ animationDelay: '4s' }} />
-          </div>
-          
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div className="max-w-6xl mx-auto">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black gradient-text leading-tight mb-8 reveal font-display tracking-tight">
-                Building India's Most Trusted Workforce.
+        <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-pattern">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto text-center">
+              <div className="mb-6 reveal">
+                <span className="trust-badge">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Trusted by 10,000+ Workers & 500+ Companies
+                </span>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-brand-primary mb-6 reveal font-display leading-tight">
+                India's Most Trusted<br />Blue-Collar Job Platform
               </h1>
-              <p className="text-xl sm:text-2xl md:text-3xl text-gray-700 mb-12 max-w-4xl mx-auto reveal leading-relaxed font-medium" style={{ transitionDelay: '0.2s' }}>
-                We connect thoroughly verified, skilled workers with quality employers. Find a reliable job. Hire a dependable team.
+              
+              <p className="text-xl sm:text-2xl text-gray-600 mb-10 max-w-4xl mx-auto reveal leading-relaxed">
+                Connecting verified skilled workers with quality employers. Find reliable work. Build dependable teams.
               </p>
 
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-6 reveal" style={{ transitionDelay: '0.4s' }}>
-                <a href="#for-workers" className="w-full sm:w-auto btn-premium text-white px-12 py-5 rounded-full font-bold text-lg">
-                  Find a Job
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16 reveal">
+                <a href="#for-workers" className="w-full sm:w-auto btn-primary px-8 py-4 text-lg">
+                  Find Jobs
                 </a>
-                <a href="#for-employers" className="w-full sm:w-auto btn-secondary text-gray-800 px-12 py-5 rounded-full font-bold text-lg">
-                  Post a Job
+                <a href="#for-employers" className="w-full sm:w-auto btn-secondary px-8 py-4 text-lg">
+                  Hire Workers
                 </a>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto reveal">
+                <div className="stat-card">
+                  <div className="stat-number">10K+</div>
+                  <div className="stat-label">Active Workers</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-number">500+</div>
+                  <div className="stat-label">Companies</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-number">95%</div>
+                  <div className="stat-label">Success Rate</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-number">24/7</div>
+                  <div className="stat-label">Support</div>
+                </div>
               </div>
             </div>
 
-            <div className="mt-24 reveal-scale float-elegant" style={{ transitionDelay: '0.6s' }}>
-              <div className="relative max-w-6xl mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 rounded-3xl blur-3xl opacity-40 pulse-premium" />
-                <div className="video-wrapper relative">
-                  <video
-                    className="rounded-3xl shadow-2xl mx-auto relative z-10 w-full"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  >
-                    <source src="/emp1.mp4" type="video/mp4" />
-                  </video>
-                </div>
+            <div className="mt-20 max-w-5xl mx-auto reveal">
+              <div className="video-container">
+                <video
+                  className="w-full"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                >
+                  <source src="/emp1.mp4" type="video/mp4" />
+                </video>
               </div>
             </div>
           </div>
         </section>
 
-        <div className="divider-elegant" />
-
         {/* For Workers Section */}
-        <section id="for-workers" className="py-32 bg-section-light relative">
+        <section id="for-workers" className="py-20 md:py-28 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-black gradient-text reveal mb-6 font-display tracking-tight">
-                आपकी मेहनत, आपका सम्मान।
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-primary reveal mb-4 font-display">
+                आपकी मेहनत, आपका सम्मान
               </h2>
-              <p className="text-2xl sm:text-3xl md:text-4xl text-gray-700 reveal font-bold" style={{ transitionDelay: '0.1s' }}>
-                सुरक्षित नौकरी, सही दाम। (Your Hard Work, Your Respect.)
+              <p className="text-xl sm:text-2xl text-gray-600 reveal font-semibold">
+                Secure Jobs. Fair Wages. Verified Companies.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  title: 'Verified Jobs Only',
-                  body: 'Apply with confidence. We vet every company for safety, reliability, and fair treatment. Say goodbye to fake jobs.',
+                  title: 'Verified Jobs',
+                  body: 'Every company is thoroughly vetted for safety and reliability. No fake jobs, no fraud.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   ),
-                  gradient: 'icon-gradient-purple',
+                  gradient: 'icon-bg-blue',
                 },
                 {
-                  title: 'No Middlemen, No Fees',
-                  body: 'Connect directly with HR. Shramic is always 100% free for workers. You keep the full salary you earn.',
+                  title: '100% Free',
+                  body: 'Zero fees for workers. Connect directly with employers and keep your full salary.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   ),
-                  gradient: 'icon-gradient-blue',
+                  gradient: 'icon-bg-green',
                 },
                 {
-                  title: 'Build Your Career',
-                  body: 'Access free, certified courses to learn new skills and qualify for higher-paying roles on our platform.',
+                  title: 'Skill Training',
+                  body: 'Access free certified courses to upgrade your skills and earn more.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   ),
-                  gradient: 'icon-gradient-pink',
+                  gradient: 'icon-bg-cyan',
                 },
                 {
-                  title: 'Financial Security',
-                  body: 'Build your verified work history to unlock access to fair-interest loans and insurance from partner banks.',
+                  title: 'Financial Benefits',
+                  body: 'Build verified work history to access loans, insurance, and PF benefits.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                     </svg>
                   ),
-                  gradient: 'icon-gradient-amber',
+                  gradient: 'icon-bg-amber',
                 },
               ].map((card, idx) => (
-                <div 
-                  key={idx} 
-                  className="glass-card p-10 rounded-3xl hover-float reveal"
-                >
-                  <div className={`${card.gradient} text-white rounded-2xl h-20 w-20 flex items-center justify-center mb-8 icon-hover`}>
+                <div key={idx} className="glass-card p-8 rounded-2xl reveal">
+                  <div className={`${card.gradient} text-white rounded-xl h-16 w-16 flex items-center justify-center mb-6 feature-icon shadow-lg`}>
                     {card.icon}
                   </div>
-                  <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">{card.title}</h3>
-                  <p className="text-lg text-gray-600 leading-relaxed font-medium">{card.body}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{card.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{card.body}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <div className="divider-elegant" />
-
         {/* For Employers Section */}
-        <section id="for-employers" className="py-32 bg-section-accent relative">
+        <section id="for-employers" className="py-20 md:py-28 bg-brand-light">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-black gradient-text reveal mb-6 font-display tracking-tight">
-                End the Revolving Door. Hire Talent That Stays.
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-primary reveal mb-4 font-display">
+                Hire Reliable Workers. Reduce Turnover.
               </h2>
-              <p className="text-2xl sm:text-3xl md:text-4xl text-gray-700 reveal font-bold" style={{ transitionDelay: '0.1s' }}>
-                Access a pre-verified, skilled, and motivated workforce.
+              <p className="text-xl sm:text-2xl text-gray-600 reveal font-semibold">
+                Access verified, skilled talent ready to join your team.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  title: '360° Verification',
-                  body: 'Go beyond a basic ID check. Background screening, skill validation, and reference checks.',
+                  title: 'Complete Verification',
+                  body: 'Background checks, skill validation, and reference verification for every worker.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   ),
                 },
                 {
-                  title: 'Reduce Attrition',
-                  body: 'Hire motivated workers vetted for long-term fit. Save hiring & training costs.',
+                  title: 'Lower Attrition',
+                  body: 'Hire motivated workers vetted for long-term fit. Save on hiring and training costs.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   ),
                 },
                 {
-                  title: 'Access a Skilled Pipeline',
-                  body: 'Filter candidates with certified skills ready to be productive.',
+                  title: 'Skilled Pipeline',
+                  body: 'Access workers with certified skills, ready to be productive from day one.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   ),
                 },
                 {
-                  title: 'Simplified Compliance',
-                  body: 'All workers are guided to secure necessary documentation for compliant employment.',
+                  title: 'Easy Compliance',
+                  body: 'All documentation guidance provided for compliant and hassle-free hiring.',
                   icon: (
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                     </svg>
                   ),
                 },
               ].map((c, i) => (
-                <div 
-                  key={i} 
-                  className="glass-card p-10 rounded-3xl hover-float reveal"
-                >
-                  <div className="icon-gradient-blue text-white rounded-2xl h-20 w-20 flex items-center justify-center mb-8 icon-hover">
+                <div key={i} className="glass-card p-8 rounded-2xl reveal">
+                  <div className="icon-bg-blue text-white rounded-xl h-16 w-16 flex items-center justify-center mb-6 feature-icon shadow-lg">
                     {c.icon}
                   </div>
-                  <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">{c.title}</h3>
-                  <p className="text-lg text-gray-600 leading-relaxed font-medium">{c.body}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{c.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{c.body}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <div className="divider-elegant" />
-
         {/* Why Shramic Section */}
-        <section id="why-shramic" className="py-32 bg-section-light relative">
+        <section id="why-shramic" className="py-20 md:py-28 bg-white">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
-              <div className="w-full lg:w-1/2 reveal-left">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-purple-400 to-blue-400 rounded-3xl blur-3xl opacity-40 pulse-premium" />
-                  <div className="video-wrapper relative">
-                    <video
-                      className="rounded-3xl shadow-2xl relative z-10 w-full"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                    >
-                      <source src="/qt.mp4" type="video/mp4" />
-                    </video>
-                  </div>
+            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+              <div className="w-full lg:w-1/2 reveal">
+                <div className="video-container">
+                  <video
+                    className="w-full"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  >
+                    <source src="/qt.mp4" type="video/mp4" />
+                  </video>
                 </div>
               </div>
 
-              <div className="w-full lg:w-1/2 reveal-right text-center lg:text-left">
-                <span className="gradient-text font-black uppercase tracking-wider text-base mb-4 inline-block">Our Philosophy</span>
-                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black gradient-text mt-2 mb-8 leading-tight font-display tracking-tight">
-                  Quality Over Quantity. Reliability Over Speed.
+              <div className="w-full lg:w-1/2 reveal">
+                <div className="inline-block bg-blue-100 text-brand-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
+                  OUR MISSION
+                </div>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-primary mb-6 font-display leading-tight">
+                  Quality Over Quantity. Trust Over Speed.
                 </h2>
-                <div className="space-y-6 text-lg md:text-xl leading-relaxed">
-                  <p className="text-gray-700 font-medium">Other job portals are built for volume. They connect millions, but the chaos and uncertainty of the informal market remain. The result is a cycle of high attrition, persistent skill gaps, and endless hiring.</p>
-                  <p className="text-amber-600 font-black text-xl md:text-2xl">Shramic is different. We are a curated ecosystem, not a digital crowd.</p>
-                  <p className="text-gray-700 font-medium">We believe one great, dependable hire is infinitely more valuable than ten fast, uncertain ones. Our rigorous verification and unwavering commitment to worker well-being create a virtuous cycle: respected workers are motivated, and motivated workers build great companies.</p>
+                <div className="space-y-4 text-lg text-gray-600 leading-relaxed">
+                  <p>Traditional job platforms focus on volume, connecting millions without solving the core challenges of India's blue-collar workforce - trust, verification, and stability.</p>
+                  <p className="font-bold text-brand-primary text-xl">Shramic Networks is different. We are a verified ecosystem built on trust.</p>
+                  <p>We believe one reliable worker is worth more than ten uncertain hires. Our thorough verification process and commitment to worker dignity creates a positive cycle: respected workers stay longer, motivated teams build stronger companies.</p>
+                  <div className="pt-4">
+                    <a href="#cta" className="btn-primary inline-block">
+                      Join Our Network
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <div className="divider-elegant" />
-
         {/* Testimonials Section */}
-        <section id="testimonials" className="py-32 bg-section-accent relative">
+        <section id="testimonials" className="py-20 md:py-28 bg-brand-light">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl sm:text-6xl md:text-7xl font-black gradient-text reveal mb-6 font-display tracking-tight">
-                Trusted by Workers and Employers
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-primary reveal mb-4 font-display">
+                Trusted by Workers & Employers
               </h2>
-              <p className="text-2xl sm:text-3xl md:text-4xl text-gray-700 reveal font-bold" style={{ transitionDelay: '0.1s' }}>
-                Real stories from the Shramic community.
+              <p className="text-xl sm:text-2xl text-gray-600 reveal font-semibold">
+                Real stories from our community.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-              <div className="testimonial-card p-12 rounded-3xl reveal">
-                <div className="flex items-start mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              <div className="testimonial-card reveal">
+                <div className="flex items-start mb-6">
                   <div className="relative flex-shrink-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl blur-lg opacity-70" />
-                    <img className="w-24 h-24 rounded-2xl object-cover relative z-10" src="https://placehold.co/100x100/f59e0b/FFFFFF?text=RK" alt="Ramesh Kumar" />
-                    <div className="badge-verified absolute -bottom-2 -right-2 w-10 h-10 rounded-full border-4 border-white z-20 flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <img className="w-20 h-20 rounded-xl object-cover border-2 border-blue-200" src="https://placehold.co/100x100/3b82f6/FFFFFF?text=RK" alt="Ramesh Kumar" />
+                    <div className="verified-badge">
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
                   </div>
-                  <div className="ml-6">
-                    <p className="font-black text-3xl text-gray-900 tracking-tight">Ramesh Kumar</p>
-                    <p className="text-amber-600 text-lg font-bold mt-1">Skilled Electrician</p>
+                  <div className="ml-4">
+                    <p className="font-bold text-xl text-gray-900">Ramesh Kumar</p>
+                    <p className="text-brand-primary font-semibold">Skilled Electrician</p>
+                    <p className="text-sm text-gray-500 mt-1">Mumbai, Maharashtra</p>
                   </div>
                 </div>
-                <p className="text-gray-700 italic text-xl leading-relaxed font-medium">
-                  "Before Shramic, finding work was stressful and relied on contractors who took a cut. With Shramic, I found a safe job directly with a good company. For the first time, I have a PF account and feel like I have a real career."
+                <p className="text-gray-700 leading-relaxed">
+                  "पहले काम ढूंढना बहुत मुश्किल था। Shramic के ज़रिए मुझे एक अच्छी कंपनी में नौकरी मिली। अब मेरे पास PF account भी है और मैं अपने परिवार का अच्छे से ख्याल रख पा रहा हूं।"
                 </p>
+                <div className="mt-4 flex items-center gap-1">
+                  {[1,2,3,4,5].map(i => (
+                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
               </div>
 
-              <div className="testimonial-card p-12 rounded-3xl reveal" style={{ transitionDelay: '0.2s' }}>
-                <div className="flex items-start mb-8">
+              <div className="testimonial-card reveal">
+                <div className="flex items-start mb-6">
                   <div className="relative flex-shrink-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl blur-lg opacity-70" />
-                    <img className="w-24 h-24 rounded-2xl object-cover relative z-10" src="https://placehold.co/100x100/8b5cf6/FFFFFF?text=PS" alt="Priya Sharma" />
-                    <div className="badge-verified absolute -bottom-2 -right-2 w-10 h-10 rounded-full border-4 border-white z-20 flex items-center justify-center">
-                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <img className="w-20 h-20 rounded-xl object-cover border-2 border-blue-200" src="https://placehold.co/100x100/0891b2/FFFFFF?text=PS" alt="Priya Sharma" />
+                    <div className="verified-badge">
+                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
                   </div>
-                  <div className="ml-6">
-                    <p className="font-black text-3xl text-gray-900 tracking-tight">Priya Sharma</p>
-                    <p className="text-purple-600 text-lg font-bold mt-1">HR Manager, ABC Logistics</p>
+                  <div className="ml-4">
+                    <p className="font-bold text-xl text-gray-900">Priya Sharma</p>
+                    <p className="text-brand-primary font-semibold">HR Manager</p>
+                    <p className="text-sm text-gray-500 mt-1">ABC Logistics Pvt Ltd</p>
                   </div>
                 </div>
-                <p className="text-gray-700 italic text-xl leading-relaxed font-medium">
-                  "The quality of candidates from Shramic is unmatched. The verification is thorough, which saves us time and reduces risk. Our attrition in the warehouse department is down by over 40% since we started using the platform exclusively."
+                <p className="text-gray-700 leading-relaxed">
+                  "The quality of candidates from Shramic Networks is exceptional. Their verification process is thorough and saves us significant time. Our warehouse attrition has decreased by 40% since we started exclusively hiring through this platform."
                 </p>
+                <div className="mt-4 flex items-center gap-1">
+                  {[1,2,3,4,5].map(i => (
+                    <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        <div className="divider-elegant" />
-
         {/* Final CTA Section */}
-        <section id="cta" className="py-32 bg-hero relative overflow-hidden">
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-20 right-20 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl pulse-premium" />
-            <div className="absolute bottom-20 left-20 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl pulse-premium" style={{ animationDelay: '2s' }} />
-            <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-amber-400 rounded-full mix-blend-multiply filter blur-3xl pulse-premium" style={{ animationDelay: '4s' }} />
-          </div>
-          
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black gradient-text mb-10 reveal font-display tracking-tight">
-              Ready to Build a Better Future of Work?
-            </h2>
-            <p className="text-2xl sm:text-3xl md:text-4xl text-gray-700 mb-14 max-w-5xl mx-auto reveal leading-relaxed font-medium" style={{ transitionDelay: '0.1s' }}>
-              Join the ecosystem of trust. Whether you're looking for a dependable job or a reliable team, start your journey with Shramic today.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-8 reveal" style={{ transitionDelay: '0.2s' }}>
-              <a href="#for-workers" className="w-full sm:w-auto btn-premium text-white px-14 py-6 rounded-full font-bold text-xl">
-                Find Your Next Job
-              </a>
-              <a href="#for-employers" className="w-full sm:w-auto btn-secondary text-gray-800 px-14 py-6 rounded-full font-bold text-xl">
-                Hire Your Next Star
-              </a>
+        <section id="cta" className="py-20 md:py-28 bg-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-brand-primary mb-6 reveal font-display">
+                Ready to Build a Better Future?
+              </h2>
+              <p className="text-xl sm:text-2xl text-gray-600 mb-10 reveal leading-relaxed">
+                Join thousands of workers and employers who trust Shramic Networks for reliable employment connections.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 reveal">
+                <a href="#for-workers" className="w-full sm:w-auto btn-primary px-10 py-4 text-lg">
+                  I'm Looking for Work
+                </a>
+                <a href="#for-employers" className="w-full sm:w-auto btn-secondary px-10 py-4 text-lg">
+                  I Want to Hire
+                </a>
+              </div>
+              
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <p className="text-gray-500 text-sm">
+                  <strong className="text-gray-700">Shramic Networks Private Limited</strong> • Registered 2025 • CIN: [Registration Number]
+                </p>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="glass-premium border-t-2 border-purple-200">
-        <div className="container mx-auto py-20 px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+      <footer className="bg-gray-50 border-t border-gray-200">
+        <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             <div className="col-span-2 md:col-span-1">
-              <h3 className="text-4xl font-black gradient-text mb-4 font-display">Shramic</h3>
-              <p className="text-gray-700 text-lg font-medium leading-relaxed">Building India's Most Trusted Workforce.</p>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <span className="text-xl font-black text-brand-primary font-display">Shramic</span>
+              </div>
+              <p className="text-gray-600 text-sm leading-relaxed">India's trusted platform for blue-collar employment.</p>
             </div>
 
             <div>
-              <h4 className="font-black text-purple-600 tracking-wider uppercase mb-6 text-base">Platform</h4>
-              <ul className="space-y-4">
-                <li><a href="#for-workers" className="text-gray-600 hover:text-amber-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">For Workers</a></li>
-                <li><a href="#for-employers" className="text-gray-600 hover:text-purple-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">For Employers</a></li>
-                <li><a href="#why-shramic" className="text-gray-600 hover:text-pink-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">Why Shramic?</a></li>
+              <h4 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Platform</h4>
+              <ul className="space-y-3">
+                <li><a href="#for-workers" className="text-gray-600 hover:text-brand-primary text-sm">For Workers</a></li>
+                <li><a href="#for-employers" className="text-gray-600 hover:text-brand-primary text-sm">For Employers</a></li>
+                <li><a href="#why-shramic" className="text-gray-600 hover:text-brand-primary text-sm">Why Us</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-black text-purple-600 tracking-wider uppercase mb-6 text-base">Company</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="text-gray-600 hover:text-amber-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">About Us</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-purple-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">Careers</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-pink-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">Contact</a></li>
+              <h4 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Company</h4>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-600 hover:text-brand-primary text-sm">About Us</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-brand-primary text-sm">Careers</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-brand-primary text-sm">Contact</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-black text-purple-600 tracking-wider uppercase mb-6 text-base">Legal</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="text-gray-600 hover:text-amber-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">Privacy Policy</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-purple-600 text-base font-medium hover:translate-x-1 inline-block transition-transform">Terms of Service</a></li>
+              <h4 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Legal</h4>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-600 hover:text-brand-primary text-sm">Privacy Policy</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-brand-primary text-sm">Terms of Service</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-brand-primary text-sm">Refund Policy</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-16 pt-10 border-t-2 border-purple-200 text-center">
-            <p className="text-gray-600 text-base font-medium">&copy; 2024 Shramic Networks. All rights reserved.</p>
+          <div className="pt-8 border-t border-gray-200 text-center">
+            <p className="text-gray-600 text-sm">
+              &copy; 2025 Shramic Networks Private Limited. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
